@@ -2,16 +2,16 @@ const MARKET_FAILURE_DATA = {
   "metadata": {
     "title": "Microchannel Market Failure",
     "dataSource": "Service Data Conderser (Microchannel Master File_October 2025.xlsx), Service & Sales Data Nov 25.xlsx, Sales & Service Data Dec25.xlsx, Sales & Service Data Jan 26.xlsx, Service & Sales Data Feb 2026.xlsx, Service & Sales Data Mar 2026.xlsx, Service & Sales Data-Apr-26.xlsx, Service & Sales Data May-26.xlsx, Service & Sales Data Jun 26.xlsx, Service & Sales Data Jul-26.xlsx & Service & Sales Data Aug 26.xlsx",
-    "confirmedLeakageRecords": 5132,
-    "uniqueAffectedUnits": 4843,
-    "importLeakage": 3913,
-    "importSharePct": 76.25,
-    "inhouseLeakage": 1219,
-    "inhouseSharePct": 23.75,
-    "top10TotalRecords": 3153,
+    "confirmedLeakageRecords": 5168,
+    "uniqueAffectedUnits": 4878,
+    "importLeakage": 3938,
+    "importSharePct": 76.2,
+    "inhouseLeakage": 1230,
+    "inhouseSharePct": 23.8,
+    "top10TotalRecords": 3175,
     "top10SharePct": 61.44,
-    "unclassifiedRecords": 55,
-    "unclassifiedSharePct": 1.07
+    "unclassifiedRecords": 74,
+    "unclassifiedSharePct": 1.43
   },
   "yearly": [
     {
@@ -40,25 +40,25 @@ const MARKET_FAILURE_DATA = {
     },
     {
       "year": 2023,
-      "importLeakage": 544,
+      "importLeakage": 545,
       "inhouseLeakage": 15,
-      "totalLeakage": 559,
+      "totalLeakage": 560,
       "importShare": 97.32,
       "inhouseShare": 2.68
     },
     {
       "year": 2024,
-      "importLeakage": 897,
-      "inhouseLeakage": 211,
-      "totalLeakage": 1108,
-      "importShare": 80.96,
-      "inhouseShare": 19.04
+      "importLeakage": 900,
+      "inhouseLeakage": 214,
+      "totalLeakage": 1114,
+      "importShare": 80.79,
+      "inhouseShare": 19.21
     },
     {
       "year": 2025,
-      "importLeakage": 1156,
-      "inhouseLeakage": 442,
-      "totalLeakage": 1598,
+      "importLeakage": 1177,
+      "inhouseLeakage": 450,
+      "totalLeakage": 1627,
       "importShare": 72.34,
       "inhouseShare": 27.66
     },
@@ -506,11 +506,11 @@ const MARKET_FAILURE_DATA = {
       "year": 2023,
       "month": "Dec",
       "monthNum": 12,
-      "importLeakage": 8,
+      "importLeakage": 9,
       "inhouseLeakage": 1,
-      "totalLeakage": 9,
-      "importShare": 88.89,
-      "inhouseShare": 11.11
+      "totalLeakage": 10,
+      "importShare": 90.0,
+      "inhouseShare": 10.0
     },
     {
       "period": "2024-01",
@@ -550,11 +550,11 @@ const MARKET_FAILURE_DATA = {
       "year": 2024,
       "month": "Apr",
       "monthNum": 4,
-      "importLeakage": 45,
+      "importLeakage": 46,
       "inhouseLeakage": 3,
-      "totalLeakage": 48,
-      "importShare": 93.75,
-      "inhouseShare": 6.25
+      "totalLeakage": 49,
+      "importShare": 93.88,
+      "inhouseShare": 6.12
     },
     {
       "period": "2024-05",
@@ -562,10 +562,10 @@ const MARKET_FAILURE_DATA = {
       "month": "May",
       "monthNum": 5,
       "importLeakage": 74,
-      "inhouseLeakage": 17,
-      "totalLeakage": 91,
-      "importShare": 81.32,
-      "inhouseShare": 18.68
+      "inhouseLeakage": 18,
+      "totalLeakage": 92,
+      "importShare": 80.43,
+      "inhouseShare": 19.57
     },
     {
       "period": "2024-06",
@@ -573,21 +573,21 @@ const MARKET_FAILURE_DATA = {
       "month": "Jun",
       "monthNum": 6,
       "importLeakage": 73,
-      "inhouseLeakage": 12,
-      "totalLeakage": 85,
-      "importShare": 85.88,
-      "inhouseShare": 14.12
+      "inhouseLeakage": 13,
+      "totalLeakage": 86,
+      "importShare": 84.88,
+      "inhouseShare": 15.12
     },
     {
       "period": "2024-07",
       "year": 2024,
       "month": "Jul",
       "monthNum": 7,
-      "importLeakage": 128,
+      "importLeakage": 129,
       "inhouseLeakage": 39,
-      "totalLeakage": 167,
-      "importShare": 76.65,
-      "inhouseShare": 23.35
+      "totalLeakage": 168,
+      "importShare": 76.79,
+      "inhouseShare": 23.21
     },
     {
       "period": "2024-08",
@@ -595,21 +595,21 @@ const MARKET_FAILURE_DATA = {
       "month": "Aug",
       "monthNum": 8,
       "importLeakage": 183,
-      "inhouseLeakage": 45,
-      "totalLeakage": 228,
-      "importShare": 80.26,
-      "inhouseShare": 19.74
+      "inhouseLeakage": 46,
+      "totalLeakage": 229,
+      "importShare": 79.91,
+      "inhouseShare": 20.09
     },
     {
       "period": "2024-09",
       "year": 2024,
       "month": "Sep",
       "monthNum": 9,
-      "importLeakage": 139,
+      "importLeakage": 140,
       "inhouseLeakage": 36,
-      "totalLeakage": 175,
-      "importShare": 79.43,
-      "inhouseShare": 20.57
+      "totalLeakage": 176,
+      "importShare": 79.55,
+      "inhouseShare": 20.45
     },
     {
       "period": "2024-10",
@@ -649,99 +649,99 @@ const MARKET_FAILURE_DATA = {
       "year": 2025,
       "month": "Jan",
       "monthNum": 1,
-      "importLeakage": 5,
+      "importLeakage": 6,
       "inhouseLeakage": 3,
-      "totalLeakage": 8,
-      "importShare": 62.5,
-      "inhouseShare": 37.5
+      "totalLeakage": 9,
+      "importShare": 66.67,
+      "inhouseShare": 33.33
     },
     {
       "period": "2025-02",
       "year": 2025,
       "month": "Feb",
       "monthNum": 2,
-      "importLeakage": 14,
+      "importLeakage": 15,
       "inhouseLeakage": 7,
-      "totalLeakage": 21,
-      "importShare": 66.67,
-      "inhouseShare": 33.33
+      "totalLeakage": 22,
+      "importShare": 68.18,
+      "inhouseShare": 31.82
     },
     {
       "period": "2025-03",
       "year": 2025,
       "month": "Mar",
       "monthNum": 3,
-      "importLeakage": 88,
+      "importLeakage": 90,
       "inhouseLeakage": 37,
-      "totalLeakage": 125,
-      "importShare": 70.4,
-      "inhouseShare": 29.6
+      "totalLeakage": 127,
+      "importShare": 70.87,
+      "inhouseShare": 29.13
     },
     {
       "period": "2025-04",
       "year": 2025,
       "month": "Apr",
       "monthNum": 4,
-      "importLeakage": 91,
-      "inhouseLeakage": 27,
-      "totalLeakage": 118,
-      "importShare": 77.12,
-      "inhouseShare": 22.88
+      "importLeakage": 93,
+      "inhouseLeakage": 29,
+      "totalLeakage": 122,
+      "importShare": 76.23,
+      "inhouseShare": 23.77
     },
     {
       "period": "2025-05",
       "year": 2025,
       "month": "May",
       "monthNum": 5,
-      "importLeakage": 75,
+      "importLeakage": 78,
       "inhouseLeakage": 35,
-      "totalLeakage": 110,
-      "importShare": 68.18,
-      "inhouseShare": 31.82
+      "totalLeakage": 113,
+      "importShare": 69.03,
+      "inhouseShare": 30.97
     },
     {
       "period": "2025-06",
       "year": 2025,
       "month": "Jun",
       "monthNum": 6,
-      "importLeakage": 183,
-      "inhouseLeakage": 52,
-      "totalLeakage": 235,
-      "importShare": 77.87,
-      "inhouseShare": 22.13
+      "importLeakage": 185,
+      "inhouseLeakage": 54,
+      "totalLeakage": 239,
+      "importShare": 77.41,
+      "inhouseShare": 22.59
     },
     {
       "period": "2025-07",
       "year": 2025,
       "month": "Jul",
       "monthNum": 7,
-      "importLeakage": 199,
-      "inhouseLeakage": 62,
-      "totalLeakage": 261,
-      "importShare": 76.25,
-      "inhouseShare": 23.75
+      "importLeakage": 203,
+      "inhouseLeakage": 63,
+      "totalLeakage": 266,
+      "importShare": 76.32,
+      "inhouseShare": 23.68
     },
     {
       "period": "2025-08",
       "year": 2025,
       "month": "Aug",
       "monthNum": 8,
-      "importLeakage": 161,
-      "inhouseLeakage": 58,
-      "totalLeakage": 219,
-      "importShare": 73.52,
-      "inhouseShare": 26.48
+      "importLeakage": 164,
+      "inhouseLeakage": 59,
+      "totalLeakage": 223,
+      "importShare": 73.54,
+      "inhouseShare": 26.46
     },
     {
       "period": "2025-09",
       "year": 2025,
       "month": "Sep",
       "monthNum": 9,
-      "importLeakage": 143,
-      "inhouseLeakage": 80,
-      "totalLeakage": 223,
-      "importShare": 64.13,
-      "inhouseShare": 35.87
+      "importLeakage": 146,
+      "inhouseLeakage": 82,
+      "totalLeakage": 228,
+      "importShare": 64.04,
+      "inhouseShare": 35.96
     },
     {
       "period": "2025-10",
@@ -871,55 +871,55 @@ const MARKET_FAILURE_DATA = {
       "import": 2159,
       "inhouse": 615,
       "total": 2774,
-      "sharePct": 54.05
+      "sharePct": 53.68
     },
     {
       "leakPoint": "Cu-Al Joint Leakage (In-Out Both)",
       "import": 849,
       "inhouse": 259,
       "total": 1108,
-      "sharePct": 21.59
+      "sharePct": 21.44
     },
     {
       "leakPoint": "Cu-Al Joint Brokage",
       "import": 350,
       "inhouse": 119,
       "total": 469,
-      "sharePct": 9.14
+      "sharePct": 9.08
     },
     {
       "leakPoint": "Header Leakage",
       "import": 273,
       "inhouse": 71,
       "total": 344,
-      "sharePct": 6.7
+      "sharePct": 6.66
     },
     {
       "leakPoint": "MPE Tube-Header Joint",
       "import": 204,
       "inhouse": 72,
       "total": 276,
-      "sharePct": 5.38
+      "sharePct": 5.34
     },
     {
       "leakPoint": "Fin Corrosion Problem",
-      "import": 43,
-      "inhouse": 63,
-      "total": 106,
-      "sharePct": 2.07
+      "import": 55,
+      "inhouse": 68,
+      "total": 123,
+      "sharePct": 2.38
     },
     {
       "leakPoint": "Unclassified / Other",
-      "import": 35,
-      "inhouse": 20,
-      "total": 55,
-      "sharePct": 1.07
+      "import": 48,
+      "inhouse": 26,
+      "total": 74,
+      "sharePct": 1.43
     }
   ],
   "unclassifiedDetails": [
     {
       "problem": "Physical Damadged- Micro-channel Condenser",
-      "count": 53
+      "count": 72
     },
     {
       "problem": "Frame broken,Front net broken-outdoor,Physical Damadged- Micro-channel Condenser,Physical Damage - Remote Problem",
@@ -935,52 +935,52 @@ const MARKET_FAILURE_DATA = {
       "rank": 1,
       "area": "Mohammadpur",
       "installedArea": "Mohammadpur",
-      "leakageRecords": 692,
-      "sharePct": 13.48,
-      "importLeaks": 549,
+      "leakageRecords": 694,
+      "sharePct": 13.43,
+      "importLeaks": 551,
       "inhouseLeaks": 143,
-      "import": 549,
+      "import": 551,
       "inhouse": 143
     },
     {
       "rank": 2,
       "area": "Mirpur",
       "installedArea": "Mirpur",
-      "leakageRecords": 550,
-      "sharePct": 10.72,
-      "importLeaks": 443,
-      "inhouseLeaks": 107,
-      "import": 443,
-      "inhouse": 107
+      "leakageRecords": 552,
+      "sharePct": 10.68,
+      "importLeaks": 444,
+      "inhouseLeaks": 108,
+      "import": 444,
+      "inhouse": 108
     },
     {
       "rank": 3,
       "area": "Keranigonj",
       "installedArea": "Keranigonj",
-      "leakageRecords": 353,
-      "sharePct": 6.88,
+      "leakageRecords": 355,
+      "sharePct": 6.87,
       "importLeaks": 271,
-      "inhouseLeaks": 82,
+      "inhouseLeaks": 84,
       "import": 271,
-      "inhouse": 82
+      "inhouse": 84
     },
     {
       "rank": 4,
       "area": "Uttara",
       "installedArea": "Uttara",
-      "leakageRecords": 312,
-      "sharePct": 6.08,
+      "leakageRecords": 313,
+      "sharePct": 6.06,
       "importLeaks": 248,
-      "inhouseLeaks": 64,
+      "inhouseLeaks": 65,
       "import": 248,
-      "inhouse": 64
+      "inhouse": 65
     },
     {
       "rank": 5,
       "area": "Ashulia",
       "installedArea": "Ashulia",
       "leakageRecords": 271,
-      "sharePct": 5.28,
+      "sharePct": 5.24,
       "importLeaks": 201,
       "inhouseLeaks": 70,
       "import": 201,
@@ -990,68 +990,68 @@ const MARKET_FAILURE_DATA = {
       "rank": 6,
       "area": "Khilgaon",
       "installedArea": "Khilgaon",
-      "leakageRecords": 269,
+      "leakageRecords": 271,
       "sharePct": 5.24,
-      "importLeaks": 209,
+      "importLeaks": 211,
       "inhouseLeaks": 60,
-      "import": 209,
+      "import": 211,
       "inhouse": 60
     },
     {
       "rank": 7,
       "area": "CTG Road",
       "installedArea": "CTG Road",
-      "leakageRecords": 253,
-      "sharePct": 4.93,
-      "importLeaks": 203,
-      "inhouseLeaks": 50,
-      "import": 203,
-      "inhouse": 50
+      "leakageRecords": 259,
+      "sharePct": 5.01,
+      "importLeaks": 208,
+      "inhouseLeaks": 51,
+      "import": 208,
+      "inhouse": 51
     },
     {
       "rank": 8,
       "area": "Kuril",
       "installedArea": "Kuril",
-      "leakageRecords": 171,
+      "leakageRecords": 172,
       "sharePct": 3.33,
-      "importLeaks": 138,
+      "importLeaks": 139,
       "inhouseLeaks": 33,
-      "import": 138,
+      "import": 139,
       "inhouse": 33
     },
     {
       "rank": 9,
       "area": "Khulna",
       "installedArea": "Khulna",
-      "leakageRecords": 143,
-      "sharePct": 2.79,
-      "importLeaks": 109,
-      "inhouseLeaks": 34,
-      "import": 109,
-      "inhouse": 34
+      "leakageRecords": 147,
+      "sharePct": 2.84,
+      "importLeaks": 111,
+      "inhouseLeaks": 36,
+      "import": 111,
+      "inhouse": 36
     },
     {
       "rank": 10,
       "area": "Jessore",
       "installedArea": "Jessore",
-      "leakageRecords": 139,
-      "sharePct": 2.71,
-      "importLeaks": 91,
-      "inhouseLeaks": 48,
-      "import": 91,
-      "inhouse": 48
+      "leakageRecords": 141,
+      "sharePct": 2.73,
+      "importLeaks": 92,
+      "inhouseLeaks": 49,
+      "import": 92,
+      "inhouse": 49
     }
   ],
   "salesToServiceDuration": {
     "summary": {
-      "totalConfirmed": 5132,
+      "totalConfirmed": 5168,
       "validCount": 5054,
-      "missingSalesCount": 78,
+      "missingSalesCount": 114,
       "invalidSalesCount": 0,
       "negativeCount": 0,
       "negativeAdjustedCount": 22,
-      "validSharePct": 98.48,
-      "missingSharePct": 1.52,
+      "validSharePct": 97.79,
+      "missingSharePct": 2.21,
       "negativeSharePct": 0.0,
       "negativeAdjustedSharePct": 0.43,
       "peakCategory": "2 Years",
@@ -1469,37 +1469,37 @@ const MARKET_FAILURE_DATA = {
   },
   "oduLeakage": {
     "summary": {
-      "totalConfirmed": 5132,
-      "classifiedCount": 5132,
+      "totalConfirmed": 5168,
+      "classifiedCount": 5168,
       "unresolvedCount": 0,
-      "legacyResolvedCount": 215,
-      "reconciliationStatus": "100% RECONCILED (5,132 of 5,132 Confirmed Leaks Classified | 0 Unresolved | 215 Legacy Barcodes Resolved to C ODU)",
+      "legacyResolvedCount": 219,
+      "reconciliationStatus": "100% RECONCILED (5,168 of 5,168 Confirmed Leaks Classified | 0 Unresolved | 219 Legacy Barcodes Resolved to C ODU)",
       "highestCategory": "C ODU",
-      "highestCount": 2945,
+      "highestCount": 2966,
       "highestPct": 57.39,
       "yAxisCeiling": 3500,
-      "tallestColumnHeightPct": 84.1,
-      "visualHeadroomPct": 15.9,
-      "auditNote": "ODU classified from standard barcode structure and verified C ODU legacy chassis mapping (215 legacy records resolved to C ODU).",
-      "totalClassified": 5132
+      "tallestColumnHeightPct": 84.7,
+      "visualHeadroomPct": 15.3,
+      "auditNote": "ODU classified from standard barcode structure and verified C ODU legacy chassis mapping (219 legacy records resolved to C ODU).",
+      "totalClassified": 5168
     },
     "categories": [
       {
         "category": "C ODU",
         "chassis": "C",
-        "description": "C Chassis Outdoor Unit (Includes 215 Verified Legacy Chassis Records)",
-        "records": 2945,
-        "standardBarcodeCount": 2730,
-        "legacyBarcodeCount": 215,
+        "description": "C Chassis Outdoor Unit (Includes 219 Verified Legacy Chassis Records)",
+        "records": 2966,
+        "standardBarcodeCount": 2747,
+        "legacyBarcodeCount": 219,
         "shareClassifiedPct": 57.39,
         "shareTotalPct": 57.39,
-        "importCount": 2945,
+        "importCount": 2966,
         "inhouseCount": 0,
         "capacities": {
-          "2 Ton": 1409,
-          "1.5 Ton": 1139,
+          "2 Ton": 1424,
+          "1.5 Ton": 1144,
           "2.0 Ton": 195,
-          "1 Ton": 191,
+          "1 Ton": 192,
           "1.0 Ton": 11
         },
         "rank": 1,
@@ -1513,16 +1513,16 @@ const MARKET_FAILURE_DATA = {
         "category": "H ODU",
         "chassis": "H",
         "description": "H Chassis Outdoor Unit",
-        "records": 2047,
-        "standardBarcodeCount": 2047,
+        "records": 2062,
+        "standardBarcodeCount": 2062,
         "legacyBarcodeCount": 0,
-        "shareClassifiedPct": 39.89,
-        "shareTotalPct": 39.89,
-        "importCount": 962,
-        "inhouseCount": 1085,
+        "shareClassifiedPct": 39.9,
+        "shareTotalPct": 39.9,
+        "importCount": 966,
+        "inhouseCount": 1096,
         "capacities": {
-          "1.5 Ton": 1477,
-          "2 Ton": 285,
+          "1.5 Ton": 1486,
+          "2 Ton": 291,
           "1 Ton": 229,
           "2.0 Ton": 56
         },
@@ -1531,7 +1531,7 @@ const MARKET_FAILURE_DATA = {
         "strokeColor": "#8E1E17",
         "textColor": "#8E1E17",
         "colorName": "Dark Red",
-        "shareOfTotalConfirmedPct": 39.89
+        "shareOfTotalConfirmedPct": 39.9
       },
       {
         "category": "M/F ODU",
@@ -1544,8 +1544,8 @@ const MARKET_FAILURE_DATA = {
           "M": 21,
           "F": 89
         },
-        "shareClassifiedPct": 2.14,
-        "shareTotalPct": 2.14,
+        "shareClassifiedPct": 2.13,
+        "shareTotalPct": 2.13,
         "importCount": 5,
         "inhouseCount": 105,
         "capacities": {
@@ -1559,7 +1559,7 @@ const MARKET_FAILURE_DATA = {
         "strokeColor": "#BE5F41",
         "textColor": "#BE5F41",
         "colorName": "Muted Orange-Red",
-        "shareOfTotalConfirmedPct": 2.14
+        "shareOfTotalConfirmedPct": 2.13
       },
       {
         "category": "J ODU",
@@ -4252,16 +4252,16 @@ const MARKET_FAILURE_DATA = {
   },
   "coatedAnalysis": {
     "pop4031": {
-      "name": "Confirmed Leaks (5,132 Records)",
-      "total": 5132,
+      "name": "Microchannel Problems (5,168 Records)",
+      "total": 5168,
       "coated": 386,
-      "coatedPct": 7.52,
-      "nonCoated": 4746,
-      "nonCoatedPct": 92.48,
-      "blankSpareParts": 1647,
-      "blankSparePartsPct": 32.09,
-      "otherSpareParts": 3099,
-      "otherSparePartsPct": 60.39,
+      "coatedPct": 7.47,
+      "nonCoated": 4782,
+      "nonCoatedPct": 92.53,
+      "blankSpareParts": 1675,
+      "blankSparePartsPct": 32.41,
+      "otherSpareParts": 3107,
+      "otherSparePartsPct": 60.12,
       "yearly": [
         {
           "year": 2020,
@@ -4295,33 +4295,33 @@ const MARKET_FAILURE_DATA = {
         },
         {
           "year": 2023,
-          "total": 559,
+          "total": 560,
           "coated": 0,
           "coatedPct": 0.0,
-          "nonCoated": 559,
+          "nonCoated": 560,
           "nonCoatedPct": 100.0,
           "blankSpareParts": 34,
-          "otherSpareParts": 525
+          "otherSpareParts": 526
         },
         {
           "year": 2024,
-          "total": 1108,
+          "total": 1114,
           "coated": 46,
-          "coatedPct": 4.15,
-          "nonCoated": 1062,
-          "nonCoatedPct": 95.85,
-          "blankSpareParts": 80,
-          "otherSpareParts": 982
+          "coatedPct": 4.13,
+          "nonCoated": 1068,
+          "nonCoatedPct": 95.87,
+          "blankSpareParts": 81,
+          "otherSpareParts": 987
         },
         {
           "year": 2025,
-          "total": 1598,
+          "total": 1627,
           "coated": 39,
-          "coatedPct": 2.44,
-          "nonCoated": 1559,
-          "nonCoatedPct": 97.56,
-          "blankSpareParts": 591,
-          "otherSpareParts": 968
+          "coatedPct": 2.4,
+          "nonCoated": 1588,
+          "nonCoatedPct": 97.6,
+          "blankSpareParts": 618,
+          "otherSpareParts": 970
         },
         {
           "year": 2026,
@@ -8538,25 +8538,25 @@ const MARKET_FAILURE_DATA = {
   },
   "replaceRepairAnalysis": {
     "pop4031": {
-      "name": "Confirmed Leaks (5,132 Records)",
-      "populationName": "Confirmed Leaks (5,132 Records)",
-      "total": 5132,
-      "replace": 3643,
-      "repair": 1489,
-      "replacePct": 70.99,
-      "repairPct": 29.01,
-      "peakReplaceYear": 2026,
-      "peakReplacePct": 82.39,
-      "peakRepairYear": 2025,
-      "peakRepairPct": 44.74,
+      "name": "Microchannel Problems (5,168 Records)",
+      "populationName": "Microchannel Problems (5,168 Records)",
+      "total": 5168,
+      "replace": 3004,
+      "repair": 2164,
+      "replacePct": 58.13,
+      "repairPct": 41.87,
+      "peakReplaceYear": 2024,
+      "peakReplacePct": 80.7,
+      "peakRepairYear": 2026,
+      "peakRepairPct": 60.9,
       "yearly": [
         {
           "year": 2020,
-          "replace": 8,
-          "repair": 0,
+          "replace": 6,
+          "repair": 2,
           "total": 8,
-          "replacePct": 100.0,
-          "repairPct": 0.0
+          "replacePct": 75.0,
+          "repairPct": 25.0
         },
         {
           "year": 2021,
@@ -8576,57 +8576,58 @@ const MARKET_FAILURE_DATA = {
         },
         {
           "year": 2023,
-          "replace": 408,
+          "replace": 409,
           "repair": 151,
-          "total": 559,
-          "replacePct": 72.99,
-          "repairPct": 27.01
+          "total": 560,
+          "replacePct": 73.04,
+          "repairPct": 26.96
         },
         {
           "year": 2024,
-          "replace": 895,
-          "repair": 213,
-          "total": 1108,
-          "replacePct": 80.78,
-          "repairPct": 19.22
+          "replace": 899,
+          "repair": 215,
+          "total": 1114,
+          "replacePct": 80.7,
+          "repairPct": 19.3
         },
         {
           "year": 2025,
-          "replace": 883,
-          "repair": 715,
-          "total": 1598,
-          "replacePct": 55.26,
-          "repairPct": 44.74
+          "replace": 934,
+          "repair": 693,
+          "total": 1627,
+          "replacePct": 57.41,
+          "repairPct": 42.59
         },
         {
           "year": 2026,
-          "replace": 1319,
-          "repair": 282,
+          "replace": 626,
+          "repair": 975,
           "total": 1601,
-          "replacePct": 82.39,
-          "repairPct": 17.61
+          "replacePct": 39.1,
+          "repairPct": 60.9
         }
       ]
     },
     "pop4253": {
-      "populationName": "All Service (5,307 Records)",
+      "name": "All Service (5,943 Records)",
+      "populationName": "All Service (5,943 Records)",
       "total": 5943,
-      "replace": 3719,
-      "repair": 2224,
-      "replacePct": 62.58,
-      "repairPct": 37.42,
-      "peakReplaceYear": 2026,
-      "peakReplacePct": 80.0,
+      "replace": 3075,
+      "repair": 2868,
+      "replacePct": 51.74,
+      "repairPct": 48.26,
+      "peakReplaceYear": 2024,
+      "peakReplacePct": 72.54,
       "peakRepairYear": 2021,
       "peakRepairPct": 77.25,
       "yearly": [
         {
           "year": 2020,
           "total": 34,
-          "replace": 14,
-          "repair": 20,
-          "replacePct": 41.18,
-          "repairPct": 58.82
+          "replace": 12,
+          "repair": 22,
+          "replacePct": 35.29,
+          "repairPct": 64.71
         },
         {
           "year": 2021,
@@ -8663,21 +8664,20 @@ const MARKET_FAILURE_DATA = {
         {
           "year": 2025,
           "total": 1958,
-          "replace": 907,
-          "repair": 1051,
-          "replacePct": 46.32,
-          "repairPct": 53.68
+          "replace": 958,
+          "repair": 1000,
+          "replacePct": 48.93,
+          "repairPct": 51.07
         },
         {
           "year": 2026,
           "total": 1601,
-          "replace": 1319,
-          "repair": 282,
-          "replacePct": 82.39,
-          "repairPct": 17.61
+          "replace": 626,
+          "repair": 975,
+          "replacePct": 39.1,
+          "repairPct": 60.9
         }
-      ],
-      "name": "All Service (5,943 Records)"
+      ]
     }
   }
 };

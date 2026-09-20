@@ -2591,7 +2591,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elPeakRep) elPeakRep.textContent = `${popData.peakReplaceYear} (${popData.peakReplacePct.toFixed(1)}%)`;
     if (elPeakFix) elPeakFix.textContent = `${popData.peakRepairYear} (${popData.peakRepairPct.toFixed(1)}%)`;
     if (elBadge) elBadge.textContent = `${numFmt(popData.replace)} Replaced (${popData.replacePct.toFixed(1)}%)`;
-    if (elSub) elSub.textContent = `Strict "Replace/ Repair" column action audit (${popData.populationName})`;
+    if (elSub) elSub.textContent = `Strict "Used Spare Parts" column action audit (${popData.populationName})`;
   }
 
   function renderTableReplaceRepair(popKey = 'pop4031') {

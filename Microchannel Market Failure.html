@@ -41,7 +41,7 @@
           <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
           Total Confirmed Leakage
         </div>
-        <div class="kpi-value" id="kpiTotalLeaks">5,721</div>
+        <div class="kpi-value" id="kpiTotalLeaks">5,168</div>
         <div class="kpi-subtext">Service records (5,357 unique physical units)</div>
       </div>
 
@@ -194,7 +194,7 @@
               <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               Data Validation & Audit Transparency
             </div>
-            <div class="chart-subtitle">Strict date audit across 5,721 confirmed MFC leak records</div>
+            <div class="chart-subtitle">Strict date audit across 5,168 confirmed MFC failure records</div>
           </div>
           <span class="badge-tag badge-leak">Quality Audited</span>
         </div>
@@ -362,7 +362,7 @@
               <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               ODU Classification Audit &amp; Reconciliation
             </div>
-            <div class="chart-subtitle">Strict barcode audit across 5,721 confirmed MFC leak records</div>
+            <div class="chart-subtitle">Strict barcode audit across 5,168 confirmed MFC failure records</div>
           </div>
           <span class="badge-tag badge-coatec">100% Fully Resolved</span>
         </div>
@@ -390,7 +390,7 @@
           <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div style="font-size: 12px; color: var(--text-primary);">
               <strong>Resolution Status:</strong> 
-              <span style="color: #0A6956; font-weight: 700;">5,721 Classified (100.0%)</span> | 
+              <span style="color: #0A6956; font-weight: 700;">5,168 Classified (100.0%)</span> | 
               <span style="color: #6B3E2E; font-weight: 600;">242 Legacy Barcodes Resolved to C ODU</span> | 
               <span style="color: #2E7D32; font-weight: 600;">0 Unresolved (0.0%)</span>
             </div>
@@ -430,7 +430,7 @@
               <span class="legend-item"><span class="legend-color" style="background: #0B3A70; border: 1px solid #082B52;"></span> Non-Coated</span>
             </div>
             <div class="segmented-control" id="coatedPopToggle" role="group" aria-label="Select Dataset Population">
-              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Confirmed Leaks Population (5,721)">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Microchannel Problems (5,168)">Microchannel Problems (5,168)</button>
               <button class="segmented-btn" data-pop="pop4253" title="Analyze All Clean MFC Service Records (5,943)">All Service (5,943)</button>
             </div>
           </div>
@@ -454,7 +454,7 @@
         <div class="duration-audit-content">
           <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));">
             <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
-              <div class="audit-metric-val" id="auditMetricTotal" style="color: #0B3A70;">5,721</div>
+              <div class="audit-metric-val" id="auditMetricTotal" style="color: #0B3A70;">5,168</div>
               <div class="audit-metric-lbl">Total Classified</div>
             </div>
             <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
@@ -516,7 +516,7 @@
               <span class="legend-item"><span class="legend-color" style="background: #0D9488; border: 1px solid #0F766E;"></span> Repair</span>
             </div>
             <div class="segmented-control" id="replaceRepairPopToggle" role="group" aria-label="Select Dataset Population">
-              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Confirmed Leaks Population (5,721)">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Microchannel Problems (5,168)">Microchannel Problems (5,168)</button>
               <button class="segmented-btn" data-pop="pop4253" title="Analyze All Clean MFC Service Records (5,943)">All Service (5,943)</button>
             </div>
           </div>
@@ -532,31 +532,31 @@
               <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               Replace vs. Repair Action Audit
             </div>
-            <div class="chart-subtitle" id="replaceRepairAuditSubtitle">Strict "Replace/ Repair" column action audit</div>
+            <div class="chart-subtitle" id="replaceRepairAuditSubtitle">Strict "Used Spare Parts" column action audit</div>
           </div>
-          <span class="badge-tag badge-replace" id="replaceRepairAuditBadge">3,693 Replaced (64.5%)</span>
+          <span class="badge-tag badge-replace" id="replaceRepairAuditBadge">3,004 Replaced (58.1%)</span>
         </div>
 
         <div class="duration-audit-content">
           <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));">
             <div class="audit-metric-card" style="border-left: 3px solid #536778;">
-              <div class="audit-metric-val" id="rrMetricTotal" style="color: #0B3A70;">5,721</div>
+              <div class="audit-metric-val" id="rrMetricTotal" style="color: #0B3A70;">5,168</div>
               <div class="audit-metric-lbl">Total Service Actions</div>
             </div>
             <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
-              <div class="audit-metric-val" id="rrMetricReplace" style="color: #0B3A70;">3,693</div>
-              <div class="audit-metric-lbl" id="rrMetricReplaceLbl">Replace (64.55%)</div>
+              <div class="audit-metric-val" id="rrMetricReplace" style="color: #0B3A70;">3,004</div>
+              <div class="audit-metric-lbl" id="rrMetricReplaceLbl">Replace (58.13%)</div>
             </div>
             <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
-              <div class="audit-metric-val" id="rrMetricRepair" style="color: #0D9488;">2,028</div>
-              <div class="audit-metric-lbl" id="rrMetricRepairLbl">Repair (35.45%)</div>
+              <div class="audit-metric-val" id="rrMetricRepair" style="color: #0D9488;">2,164</div>
+              <div class="audit-metric-lbl" id="rrMetricRepairLbl">Repair (41.87%)</div>
             </div>
             <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
-              <div class="audit-metric-val" id="rrMetricPeakReplace" style="color: #B45309;">2024 (72.4%)</div>
+              <div class="audit-metric-val" id="rrMetricPeakReplace" style="color: #B45309;">2024 (80.7%)</div>
               <div class="audit-metric-lbl">Peak Replace Year</div>
             </div>
             <div class="audit-metric-card" style="border-left: 3px solid #0F766E;">
-              <div class="audit-metric-val" id="rrMetricPeakRepair" style="color: #0F766E;">2025 (53.1%)</div>
+              <div class="audit-metric-val" id="rrMetricPeakRepair" style="color: #0F766E;">2026 (60.9%)</div>
               <div class="audit-metric-lbl">Peak Repair Year</div>
             </div>
           </div>
@@ -564,7 +564,7 @@
           <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
             <div style="font-size: 12px; color: var(--text-primary);">
               <strong>Classification Field:</strong>
-              <span style="color: #0B3A70; font-weight: 700;">"Replace/ Repair"</span> (Column AD / index 29) defines whether the unit received a component replacement or field repair.
+              <span style="color: #0B3A70; font-weight: 700;">"Used Spare Parts"</span> defines whether the microchannel condenser was replaced (explicit Micro Channel condenser / MFC part) or repaired (blank / brazing / recharge).
             </div>
             <button id="btnJumpToReplaceRepairTable" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
               View Action Summary Table →
@@ -577,7 +577,7 @@
               Service Protocol &amp; Action Classification Standard
             </div>
             <p class="audit-note-text">
-              Every confirmed MFC record in the validated dataset possesses an explicit action: <strong>100% complete with 0 unclassified records</strong>. Replacement peaked in 2024 at <strong>72.41%</strong> (903 replacements vs 344 repairs), while 2025 saw repair actions surge to <strong>54.72%</strong> (1,002 repairs vs 829 replacements) as technicians performed localized coil brazing and refrigerant recharge procedures.
+              Every confirmed microchannel problem record in the isolated dataset possesses an audited action: <strong>100% reconciled with 0 unclassified records</strong> ($3,004 + 2,164 = 5,168$). Coil replacement peaked in 2024 at <strong>80.70%</strong> (899 replacements vs 215 repairs), while 2026 saw repair actions surge to <strong>60.90%</strong> (975 repairs vs 626 replacements) as technicians performed localized coil brazing and refrigerant recharge procedures.
             </p>
           </div>
         </div>
@@ -921,7 +921,7 @@
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <div class="segmented-control" id="tableCoatedPopToggle">
-              <button class="segmented-btn active" data-pop="pop4031">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn active" data-pop="pop4031">Microchannel Problems (5,168)</button>
               <button class="segmented-btn" data-pop="pop4253">All Service (5,943)</button>
             </div>
             <button class="btn-export" id="exportCoatedCsvBtn" style="padding: 6px 14px; font-size: 12px;">
@@ -993,8 +993,8 @@
       <div id="tabReplaceRepair" class="tab-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h3 class="section-subheading" style="margin-bottom: 2px;" id="replaceRepairTableTitle">Year-Wise Replace vs. Repair Breakdown (Confirmed Leaks (5,721 Records))</h3>
-            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service action distribution categorized strictly from the "Replace/ Repair" column.</p>
+            <h3 class="section-subheading" style="margin-bottom: 2px;" id="replaceRepairTableTitle">Year-Wise Replace vs. Repair Breakdown (Microchannel Problems (5,168 Records))</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service action distribution categorized strictly from the "Used Spare Parts" column.</p>
           </div>
           <button id="btnExportReplaceRepairCSV" class="btn-export">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -1026,7 +1026,7 @@
     <!-- Footer -->
     <footer class="dashboard-footer">
       <div>Walton Hi-Tech Industries PLC | Process Development Division &amp; MFC Service Engineering</div>
-      <div>Source: <code>Microchannel Master File_October 2025.xlsx</code>, <code>Service &amp; Sales Data Nov 25.xlsx</code>, <code>Sales &amp; Service Data Dec25.xlsx</code>, <code>Sales &amp; Service Data Jan 26.xlsx</code>, <code>Service &amp; Sales Data Feb 2026.xlsx</code>, <code>Service &amp; Sales Data Mar 2026.xlsx</code> &amp; <code>Service &amp; Sales Data-Apr-26.xlsx</code>, <code>Service &amp; Sales Data May-26.xlsx</code>, <code>Service &amp; Sales Data Jun 26.xlsx</code>, <code>Service &amp; Sales Data Jul-26.xlsx</code> &amp; <code>Service &amp; Sales Data Aug 26.xlsx</code> | 5,721 Confirmed Leakage Records (100% Reconciled)</div>
+      <div>Source: <code>Microchannel Master File_October 2025.xlsx</code>, <code>Service &amp; Sales Data Nov 25.xlsx</code>, <code>Sales &amp; Service Data Dec25.xlsx</code>, <code>Sales &amp; Service Data Jan 26.xlsx</code>, <code>Service &amp; Sales Data Feb 2026.xlsx</code>, <code>Service &amp; Sales Data Mar 2026.xlsx</code> &amp; <code>Service &amp; Sales Data-Apr-26.xlsx</code>, <code>Service &amp; Sales Data May-26.xlsx</code>, <code>Service &amp; Sales Data Jun 26.xlsx</code>, <code>Service &amp; Sales Data Jul-26.xlsx</code> &amp; <code>Service &amp; Sales Data Aug 26.xlsx</code> | 5,168 Confirmed Leakage Records (100% Reconciled)</div>
     </footer>
 
     <!-- Modal for Inspecting Unclassified / Other Records -->
