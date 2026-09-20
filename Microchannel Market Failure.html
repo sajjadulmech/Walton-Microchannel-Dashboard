@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walton RAC | Microchannel Market Failure</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Top Header & Brand Bar (100% Viewport Width) -->
+  <header class="header-bar">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="assets/walton-logo.png" alt="Walton Logo" class="brand-logo">
+        <div class="header-titles">
+          <h1>Microchannel Market Failure</h1>
+          <p>Process Development Division | Post-Sales Service &amp; Condenser Reliability Intelligence (2020 – August 2026)</p>
+        </div>
+      </div>
+
+      <!-- Multi-Dashboard Page Navigation -->
+      <nav class="page-nav" aria-label="Dashboard Navigation">
+        <a href="Microchannel Market Failure.html" class="page-nav-link active" title="View Microchannel Market Failure Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Microchannel Market Failure
+        </a>
+        <a href="Microchannel Market Sales.html" class="page-nav-link" title="View Market Sales Analytics Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Market Sales Analytics
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- KPI Metric Cards Grid (5 Cards) -->
+    <section class="kpi-grid">
+      <!-- Total Confirmed Leakage Records -->
+      <div class="kpi-card leak">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Total Confirmed Leakage
+        </div>
+        <div class="kpi-value" id="kpiTotalLeaks">5,721</div>
+        <div class="kpi-subtext">Service records (5,357 unique physical units)</div>
+      </div>
+
+      <!-- Import Leakage -->
+      <div class="kpi-card cu">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          Import Condenser Leakage
+        </div>
+        <div class="kpi-value" id="kpiImportLeaks">4,316</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-cu" id="kpiImportShare">75.44% of Confirmed Leaks</span>
+        </div>
+      </div>
+
+      <!-- Inhouse Leakage -->
+      <div class="kpi-card primary-accent">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Inhouse Condenser Leakage
+        </div>
+        <div class="kpi-value" id="kpiInhouseLeaks">1,405</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-mfc" id="kpiInhouseShare">24.56% of Confirmed Leaks</span>
+        </div>
+      </div>
+
+      <!-- Dominant Leakage Point -->
+      <div class="kpi-card accent-brown">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Dominant Leakage Point
+        </div>
+        <div class="kpi-value" style="font-size: 20px; line-height: 1.3;" id="kpiTopLeakPoint">Microchannel Body Leakage</div>
+        <div class="kpi-subtext">2,743 records (47.95% failure share)</div>
+      </div>
+
+      <!-- Top Installed Area -->
+      <div class="kpi-card accent-amber">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Top Installed Area
+        </div>
+        <div class="kpi-value" style="font-size: 20px; line-height: 1.3;" id="kpiTopArea">Mohammadpur</div>
+        <div class="kpi-subtext">721 records (12.60% of confirmed leaks)</div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid (2x2) -->
+    <section class="charts-grid">
+      <!-- Chart 1: Year-Wise Import vs. Inhouse Leakage (Side-by-Side Grouped Columns) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="#0B3A70"><rect x="3" y="11" width="4.5" height="10" rx="2.25"/><rect x="9.75" y="3" width="4.5" height="18" rx="2.25"/><rect x="16.5" y="7" width="4.5" height="14" rx="2.25"/></svg>
+              Year-Wise Confirmed Leakage (Import vs. Inhouse)
+            </div>
+            <div class="chart-subtitle">Annual confirmed leakage records comparison (2020 – 2026)</div>
+          </div>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-color" style="background: #D7C2A5; width: 14px; height: 11px; border-radius: 3px;"></span> Import</span>
+            <span class="legend-item"><span class="legend-color" style="background: #0A3B79; width: 14px; height: 11px; border-radius: 3px;"></span> Inhouse</span>
+          </div>
+        </div>
+        <div id="chartYearlyLeakage" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 2: Month-Wise Confirmed Leakage (Multi-Series Monthly Time-Series Line Chart) -->
+      <div class="chart-card">
+        <div class="chart-header" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Month-Wise Confirmed Leakage
+            </div>
+            <div id="chartMonthlySubtitle" class="chart-subtitle">Monthly MFC leakage records — Year-over-Year Comparison</div>
+          </div>
+          <div class="chart-legend monthly-years-legend" id="chartMonthlyLegend">
+            <span class="legend-item" data-year="2021"><span class="legend-line-dot" style="background: #64748B;"></span> 2021</span>
+            <span class="legend-item" data-year="2022"><span class="legend-line-dot" style="background: #059669;"></span> 2022</span>
+            <span class="legend-item" data-year="2023"><span class="legend-line-dot" style="background: #D97706;"></span> 2023</span>
+            <span class="legend-item" data-year="2024"><span class="legend-line-dot" style="background: #2563EB;"></span> 2024</span>
+            <span class="legend-item" data-year="2025"><span class="legend-line-dot" style="background: #E11D48;"></span> 2025</span>
+            <span class="legend-item" data-year="2026"><span class="legend-line-dot" style="background: #7C3AED;"></span> 2026</span>
+          </div>
+        </div>
+        <div id="chartMonthlyLeakage" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 3: Leakage Point Breakdown (Pareto Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              Leakage Point Breakdown (Source: Expert Found Problems)
+            </div>
+            <div class="chart-subtitle">Sequential severity progression: Dark Brown (High) → Light Green (Low)</div>
+          </div>
+        </div>
+        <div id="chartLeakagePoints" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 4: Top 10 Installed Areas (Horizontal Ranked Lollipop Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Top 10 Installed Areas (Source: Service Center)
+            </div>
+            <div class="chart-subtitle">Top 10 Service Centers account for 3,469 records (60.64% of total leaks)</div>
+          </div>
+          <span class="badge-tag badge-coatec">Ranked Top 10</span>
+        </div>
+        <div id="chartTopAreas" class="chart-container"></div>
+      </div>
+    </section>
+
+
+    <!-- Section 3: Sales-to-Service Duration Analysis -->
+    <section class="charts-grid">
+      <!-- Chart 5: Sales-to-Service Duration (Dual Column + Median Line Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Sales-to-Service Duration
+            </div>
+            <div class="chart-subtitle">Distribution of MFC service records by time since sale</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-color" style="background: #8B2E2E;"></span> Peak (2 Years)</div>
+              <div class="legend-item"><span class="legend-color" style="background: linear-gradient(135deg, #B83B3B, #D97757, #A8D5A2);"></span> Distribution</div>
+            </div>
+            <span class="badge-tag badge-coatec">Duration Metric</span>
+          </div>
+        </div>
+        <div id="chartSalesToService" class="chart-container"></div>
+      </div>
+
+      <!-- Data Validation & Anomaly Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Data Validation & Audit Transparency
+            </div>
+            <div class="chart-subtitle">Strict date audit across 5,721 confirmed MFC leak records</div>
+          </div>
+          <span class="badge-tag badge-leak">Quality Audited</span>
+        </div>
+        
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid">
+            <div class="audit-metric-card valid">
+              <div class="audit-metric-val">5,617</div>
+              <div class="audit-metric-lbl">Valid Analyzed (98.2%)</div>
+            </div>
+            <div class="audit-metric-card missing">
+              <div class="audit-metric-val">104</div>
+              <div class="audit-metric-lbl">Missing Sales (1.8%)</div>
+            </div>
+            <div class="audit-metric-card negative">
+              <div class="audit-metric-val">30</div>
+              <div class="audit-metric-lbl">Negative Adj. (0.5%)</div>
+            </div>
+            <div class="audit-metric-card clean">
+              <div class="audit-metric-val">0</div>
+              <div class="audit-metric-lbl">Invalid Dates (0.0%)</div>
+            </div>
+          </div>
+
+          <div class="audit-note-box">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Audit Insight: Operating Age Trajectory
+            </div>
+            <p class="audit-note-text">
+              Over <strong>74.4%</strong> of all confirmed MFC leakage complaints occur within the first 2 completed years after sale (<strong>&lt; 1 Year</strong>: 20.7%, <strong>1 Year</strong>: 26.5%, <strong>2 Years</strong>: 27.3%), with peak failure incidence in <strong>2 Years (730–1,094 days)</strong> (1,532 records, 27.27%).
+            </p>
+          </div>
+
+          <!-- Collapsible Flagged Anomalies Details -->
+          <details class="anomalies-details" style="margin-top: 10px;">
+            <summary style="cursor: pointer; font-size: 11.5px; font-weight: 600; color: #B3261E;">
+              View 30 Flagged Anomaly Records (Negative Durations Adjusted to 3 Days) ▾
+            </summary>
+            <div style="max-height: 130px; overflow-y: auto; margin-top: 6px; border: 1px solid var(--border-default); border-radius: 6px;">
+              <table class="data-table" style="font-size: 10.5px; margin: 0;">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>SR No</th>
+                    <th>Created Date</th>
+                    <th>Sales Date</th>
+                    <th class="col-num">Duration</th>
+                  </tr>
+                </thead>
+                <tbody id="negativeAnomaliesTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3B: < 1 Year Service Duration by Quarter -->
+    <section class="charts-grid">
+      <!-- Chart 5B: < 1 Year Duration by Quarter (Distribution Pie / Donut Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              &lt; 1 Year Service Duration by Quarter
+            </div>
+            <div class="chart-subtitle">Overall distribution of 1,161 records (0–364 days)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="badge-tag badge-leak">Cohort Split</span>
+          </div>
+        </div>
+        <div id="chartUnderOneYearQuarters" class="chart-container"></div>
+      </div>
+
+      <!-- < 1 Year Cohort Quarterly Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              &lt; 1 Year Cohort Audit &amp; Distribution
+            </div>
+            <div class="chart-subtitle">Strict 4-quarter subdivision across 1,161 &lt; 1 Year service records</div>
+          </div>
+          <span class="badge-tag badge-coatec">1,161 Records (100%)</span>
+        </div>
+
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));">
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" style="color: #D97706;">369</div>
+              <div class="audit-metric-lbl">1st Qtr: 0–&lt;3m (31.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" style="color: #0B3A70;">357</div>
+              <div class="audit-metric-lbl">2nd Qtr: 3–&lt;6m (30.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #536778;">
+              <div class="audit-metric-val" style="color: #536778;">172</div>
+              <div class="audit-metric-lbl">3rd Qtr: 6–&lt;9m (14.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
+              <div class="audit-metric-val" style="color: #0D9488;">263</div>
+              <div class="audit-metric-lbl">4th Qtr: 9–&lt;12m (22.6%)</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Cohort Baseline:</strong>
+              <span style="color: #0B3A70; font-weight: 700;">1,161 records</span> from the validated &lt; 1 Year (0–364 days) duration dataset.
+            </div>
+            <span class="badge-tag badge-coatec" style="font-size: 11px;">100% Reconciled</span>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Infant Mortality &amp; Early Failure Trajectory
+            </div>
+            <p class="audit-note-text">
+              Within the first operating year, failure concentration is heaviest in the <strong>1st Quarter (0–&lt;3 months: 31.8%)</strong> and <strong>2nd Quarter (3–&lt;6 months: 30.8%)</strong>, combining for <strong>62.5% (726 records)</strong> of all infant-year claims. Failures trough in the <strong>3rd Quarter (14.8%)</strong> during off-peak seasonal usage before rising in the <strong>4th Quarter (22.6%)</strong> as units approach their first annual service inspection and pre-warranty cutoff.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <!-- Section 4: ODU-Wise MFC Leakage & Chassis Audit -->
+    <section class="charts-grid">
+      <!-- Chart 6: ODU-Wise MFC Leakage (Vertical Column Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+              ODU-Wise MFC Leakage
+            </div>
+            <div class="chart-subtitle">Confirmed MFC leakage records by outdoor unit type</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span class="badge-tag" style="background: #EFEBE9; color: #6B3E2E; border: 1px solid #D7CCC8;">#1 C ODU</span>
+            <span class="badge-tag" style="background: #FFEBEE; color: #B3261E; border: 1px solid #FFCDD2;">#2 H ODU</span>
+            <span class="badge-tag" style="background: #FBE9E7; color: #D97757; border: 1px solid #FFCCBC;">#3 M/F ODU</span>
+            <span class="badge-tag" style="background: #E8F5E9; color: #3E6637; border: 1px solid #C8E6C9;">#4 J ODU</span>
+          </div>
+        </div>
+        <div id="chartOduLeakage" class="chart-container"></div>
+        <div style="margin-top: 8px; font-size: 11.5px; color: var(--text-secondary); font-style: italic; border-top: 1px dashed var(--border-default); padding-top: 6px;">
+          ODU classified from standard barcode structure and verified C ODU legacy chassis mapping (195 legacy records resolved to C ODU).
+        </div>
+      </div>
+
+      <!-- ODU Classification Audit & Reconciliation Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              ODU Classification Audit &amp; Reconciliation
+            </div>
+            <div class="chart-subtitle">Strict barcode audit across 5,721 confirmed MFC leak records</div>
+          </div>
+          <span class="badge-tag badge-coatec">100% Fully Resolved</span>
+        </div>
+        
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid">
+            <div class="audit-metric-card" style="border-left: 3px solid #6B3E2E;">
+              <div class="audit-metric-val" style="color: #6B3E2E;">3,270</div>
+              <div class="audit-metric-lbl">C ODU (57.2%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #B3261E;">
+              <div class="audit-metric-val" style="color: #B3261E;">2,240</div>
+              <div class="audit-metric-lbl">H ODU (39.1%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #D97757;">
+              <div class="audit-metric-val" style="color: #D97757;">158</div>
+              <div class="audit-metric-lbl">M/F ODU (2.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #7CAF72;">
+              <div class="audit-metric-val" style="color: #3E6637;">53</div>
+              <div class="audit-metric-lbl">J ODU (0.9%)</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Resolution Status:</strong> 
+              <span style="color: #0A6956; font-weight: 700;">5,721 Classified (100.0%)</span> | 
+              <span style="color: #6B3E2E; font-weight: 600;">242 Legacy Barcodes Resolved to C ODU</span> | 
+              <span style="color: #2E7D32; font-weight: 600;">0 Unresolved (0.0%)</span>
+            </div>
+            <button id="btnJumpToOduAudit" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              Inspect 242 Legacy C ODU Records →
+            </button>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Barcode Architecture &amp; Protocol Compliance
+            </div>
+            <p class="audit-note-text">
+              ODU chassis types are identified from the standard 16-character barcode structure (<code>^[0-9]{2}X([A-Za-z])[0-9]{4}</code>), where the letter immediately following capacity denotes ODU chassis. <strong>M and F chassis</strong> are normalized into unified <strong>M/F ODU</strong> (M: 21, F: 85). All <strong>195 legacy records</strong> bearing prefix <code>BXX0103...</code> (WSI-RIVERINE-24C & WSI-VENTURI-24C 2.0 Ton) are verified C ODU chassis and fully incorporated into <strong>C ODU (2,942 records, 57.86%)</strong>, achieving 100% population resolution.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Coated vs. Non-Coated MFC Condenser Analysis -->
+    <section class="charts-grid">
+      <!-- Chart 7: Year-Wise Coated vs. Non-Coated Condenser (Grouped Columns) -->
+      <div class="chart-card">
+        <div class="chart-header" style="flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              Coated vs. Non-Coated MFC Condenser
+            </div>
+            <div id="chartCoatedSubtitle" class="chart-subtitle">Year-wise distribution based on Used Spare Parts evidence</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-color" style="background: #D97706; border: 1px solid #B45309;"></span> Coated</span>
+              <span class="legend-item"><span class="legend-color" style="background: #0B3A70; border: 1px solid #082B52;"></span> Non-Coated</span>
+            </div>
+            <div class="segmented-control" id="coatedPopToggle" role="group" aria-label="Select Dataset Population">
+              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Confirmed Leaks Population (5,721)">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn" data-pop="pop4253" title="Analyze All Clean MFC Service Records (5,943)">All Service (5,943)</button>
+            </div>
+          </div>
+        </div>
+        <div id="chartCoatedVsNonCoated" class="chart-container"></div>
+      </div>
+
+      <!-- Coated vs. Non-Coated Classification Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Coated vs. Non-Coated Classification Audit
+            </div>
+            <div class="chart-subtitle" id="coatedAuditSubtitle">Strict Used Spare Parts evidence &amp; population audit</div>
+          </div>
+          <span class="badge-tag badge-coated" id="coatedAuditBadge">370 Coated Records</span>
+        </div>
+
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));">
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" id="auditMetricTotal" style="color: #0B3A70;">5,721</div>
+              <div class="audit-metric-lbl">Total Classified</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" id="auditMetricCoated" style="color: #D97706;">370</div>
+              <div class="audit-metric-lbl" id="auditMetricCoatedLbl">Coated (6.47%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #2B547E;">
+              <div class="audit-metric-val" id="auditMetricNonCoated" style="color: #2B547E;">5,351</div>
+              <div class="audit-metric-lbl" id="auditMetricNonCoatedLbl">Non-Coated (93.53%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #7A8A98;">
+              <div class="audit-metric-val" id="auditMetricBlank" style="color: #536778;">1,711</div>
+              <div class="audit-metric-lbl" id="auditMetricBlankLbl">Blank Parts (29.91%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #C9B08D;">
+              <div class="audit-metric-val" id="auditMetricOther" style="color: #8F6B3E;">3,640</div>
+              <div class="audit-metric-lbl" id="auditMetricOtherLbl">Other Parts (63.63%)</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Classification Rule:</strong>
+              <span style="color: #C47E00; font-weight: 700;">"Color-Black For Coatec Series"</span> determines Coated status; blank or other parts are strictly Non-Coated.
+            </div>
+            <button id="btnJumpToCoatedRegister" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              Inspect 370 Coated Records →
+            </button>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Rigorous Spare-Parts Evidence Standard
+            </div>
+            <p class="audit-note-text">
+              Zero cross-field inference was applied. <code>Condenser Type</code>, <code>Model name</code>, <code>Customer comments</code>, and <code>Expert Found Problems</code> were <strong>not</strong> used to assign coated status. Even when other components mention "Black" or "Coatec" (e.g. black vane guides or coated evaporators), only entries with the exact phrase <code>Color-Black For Coatec Series</code> (parts <code>SPAR.AIRC.446435</code> &amp; <code>446436</code>) are classified as <strong>Coated</strong>. All 370 coated events occurred in 2024 (46), 2025 (30), and 2026 (294).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Year-Wise Replace vs. Repair Analysis -->
+    <section class="charts-grid">
+      <!-- Chart 8: Year-Wise Replace vs. Repair (Grouped Columns) -->
+      <div class="chart-card">
+        <div class="chart-header" style="flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              Year-Wise Replace vs. Repair
+            </div>
+            <div id="chartReplaceRepairSubtitle" class="chart-subtitle">Annual distribution of MFC service actions</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-color" style="background: #0B3A70; border: 1px solid #082B52;"></span> Replace</span>
+              <span class="legend-item"><span class="legend-color" style="background: #0D9488; border: 1px solid #0F766E;"></span> Repair</span>
+            </div>
+            <div class="segmented-control" id="replaceRepairPopToggle" role="group" aria-label="Select Dataset Population">
+              <button class="segmented-btn active" data-pop="pop4031" title="Analyze Confirmed Leaks Population (5,721)">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn" data-pop="pop4253" title="Analyze All Clean MFC Service Records (5,943)">All Service (5,943)</button>
+            </div>
+          </div>
+        </div>
+        <div id="chartReplaceVsRepair" class="chart-container"></div>
+      </div>
+
+      <!-- Replace vs. Repair Action Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Replace vs. Repair Action Audit
+            </div>
+            <div class="chart-subtitle" id="replaceRepairAuditSubtitle">Strict "Replace/ Repair" column action audit</div>
+          </div>
+          <span class="badge-tag badge-replace" id="replaceRepairAuditBadge">3,693 Replaced (64.5%)</span>
+        </div>
+
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));">
+            <div class="audit-metric-card" style="border-left: 3px solid #536778;">
+              <div class="audit-metric-val" id="rrMetricTotal" style="color: #0B3A70;">5,721</div>
+              <div class="audit-metric-lbl">Total Service Actions</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" id="rrMetricReplace" style="color: #0B3A70;">3,693</div>
+              <div class="audit-metric-lbl" id="rrMetricReplaceLbl">Replace (64.55%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
+              <div class="audit-metric-val" id="rrMetricRepair" style="color: #0D9488;">2,028</div>
+              <div class="audit-metric-lbl" id="rrMetricRepairLbl">Repair (35.45%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" id="rrMetricPeakReplace" style="color: #B45309;">2024 (72.4%)</div>
+              <div class="audit-metric-lbl">Peak Replace Year</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0F766E;">
+              <div class="audit-metric-val" id="rrMetricPeakRepair" style="color: #0F766E;">2025 (53.1%)</div>
+              <div class="audit-metric-lbl">Peak Repair Year</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Classification Field:</strong>
+              <span style="color: #0B3A70; font-weight: 700;">"Replace/ Repair"</span> (Column AD / index 29) defines whether the unit received a component replacement or field repair.
+            </div>
+            <button id="btnJumpToReplaceRepairTable" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              View Action Summary Table →
+            </button>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Service Protocol &amp; Action Classification Standard
+            </div>
+            <p class="audit-note-text">
+              Every confirmed MFC record in the validated dataset possesses an explicit action: <strong>100% complete with 0 unclassified records</strong>. Replacement peaked in 2024 at <strong>72.41%</strong> (903 replacements vs 344 repairs), while 2025 saw repair actions surge to <strong>54.72%</strong> (1,002 repairs vs 829 replacements) as technicians performed localized coil brazing and refrigerant recharge procedures.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabbed Structured Data Explorer -->
+    <section class="explorer-card">
+      <div class="tabs-header">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="yearlyTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Year-Wise Leakage
+          </button>
+          <button class="tab-btn" data-tab="monthlyTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Month-Wise Leakage
+          </button>
+          <button class="tab-btn" data-tab="pointsTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Leakage Points Summary
+          </button>
+          <button class="tab-btn" data-tab="areasTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Top 10 Installed Areas
+          </button>
+          <button class="tab-btn" data-tab="durationTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Sales-to-Service Duration
+          </button>
+          <button class="tab-btn" data-tab="oduTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            ODU Breakdown &amp; Audit
+          </button>
+          <button class="tab-btn" data-tab="coatedTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Coated vs. Non-Coated
+          </button>
+          <button class="tab-btn" data-tab="replaceRepairTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Replace vs. Repair
+          </button>
+        </div>
+
+        <div class="tab-actions">
+          <button id="btnExport" class="btn-export">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export Failure Dataset (CSV)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Year-Wise Leakage Table -->
+      <div id="tabYearly" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Year-Wise Confirmed Condenser Leakage Records</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service records: Import + Inhouse = Total Leakage.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Source: <code>Service Data Conderser</code> (Confirmed MFC Leaks)</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 100px;">Year</th>
+                <th class="col-num">Import Leakage</th>
+                <th class="col-num">Inhouse Leakage</th>
+                <th class="col-num">Total Leakage</th>
+                <th class="col-num" style="width: 140px;">Import Share %</th>
+                <th class="col-num" style="width: 140px;">Inhouse Share %</th>
+                <th style="text-align: center; width: 130px;">Validation Status</th>
+              </tr>
+            </thead>
+            <tbody id="yearlyTableBody"></tbody>
+            <tfoot id="yearlyTableFoot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Month-Wise Leakage Table -->
+      <div id="tabMonthly" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div class="filter-group" id="monthYearFilters">
+            <button class="filter-chip active" data-year="all">All (75 Mos)</button>
+            <button class="filter-chip" data-year="2020">2020 (10)</button>
+            <button class="filter-chip" data-year="2021">2021 (11)</button>
+            <button class="filter-chip" data-year="2022">2022 (12)</button>
+            <button class="filter-chip" data-year="2023">2023 (12)</button>
+            <button class="filter-chip" data-year="2024">2024 (12)</button>
+            <button class="filter-chip" data-year="2025">2025 (12)</button>
+            <button class="filter-chip" data-year="2026">2026 (6)</button>
+          </div>
+          <input type="text" id="monthSearch" class="search-input" placeholder="Search period (e.g. 2024, Jul)..." style="width: 240px;">
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 100px;">Year</th>
+                <th style="width: 100px;">Month</th>
+                <th class="col-num">Import Leakage</th>
+                <th class="col-num">Inhouse Leakage</th>
+                <th class="col-num">Total Leakage</th>
+                <th class="col-num" style="width: 130px;">Import Share %</th>
+                <th class="col-num" style="width: 130px;">Inhouse Share %</th>
+                <th style="text-align: center; width: 120px;">Reconciled</th>
+              </tr>
+            </thead>
+            <tbody id="monthlyTableBody"></tbody>
+            <tfoot id="monthlyTableFoot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Leakage Points Summary Table -->
+      <div id="tabPoints" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Official Leakage Points Failure Distribution</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Classified strictly from the <code>Expert Found Problems</code> column with zero inferences from other fields.</p>
+          </div>
+          <button id="btnViewUnclassified" class="btn-export" style="font-size: 12px; padding: 6px 14px;">
+            Inspect 664 Unclassified / Other Records
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 45px;">#</th>
+                <th>Leakage Point</th>
+                <th class="col-num">Import</th>
+                <th class="col-num">Inhouse</th>
+                <th class="col-num">Total</th>
+                <th class="col-num" style="width: 130px;">Share %</th>
+                <th style="width: 240px;">Visual Distribution</th>
+              </tr>
+            </thead>
+            <tbody id="pointsTableBody"></tbody>
+            <tfoot id="pointsTableFoot"></tfoot>
+          </table>
+        </div>
+
+        <div class="ambiguous-callout" style="margin-top: 20px; margin-bottom: 0;">
+          <div>
+            <div class="ambiguous-callout-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue-800)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Strict Classification Compliance Statement
+            </div>
+            <div class="ambiguous-callout-desc">
+              Per project specification, only the <code>Expert Found Problems</code> column was consulted. Confirmed leaks that did not explicitly state one of the six categories (such as connecting short tubes, service valves, Y-joints, and multi-problem combinations) were assigned to <strong>“Unclassified / Other” (664 records)</strong> to prevent false assumptions.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Top 10 Installed Areas Table -->
+      <div id="tabAreas" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Top 10 Installed Areas by Confirmed Leakage Records</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Ranked based on source column <code>Service Center</code>.</p>
+          </div>
+          <span class="badge-tag badge-mfc">Source: Service Center</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px;">Rank</th>
+                <th>Installed Area (Service Center)</th>
+                <th class="col-num">Leakage Records</th>
+                <th class="col-num" style="width: 130px;">Share %</th>
+                <th class="col-num">Import Leaks</th>
+                <th class="col-num">Inhouse Leaks</th>
+                <th style="width: 220px;">Relative Volume</th>
+              </tr>
+            </thead>
+            <tbody id="areasTableBody"></tbody>
+            <tfoot id="areasTableFoot"></tfoot>
+          </table>
+        </div>
+
+        <!-- Installed Base Caveat Box -->
+        <div class="ambiguous-callout" style="margin-top: 20px; margin-bottom: 0; border-left-color: var(--amber-600);">
+          <div>
+            <div class="ambiguous-callout-title" style="color: var(--amber-700);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Important Data Interpretation Notice
+            </div>
+            <div class="ambiguous-callout-desc">
+              The figures above represent post-sales service records logged at Walton Service Centers. <strong>This does NOT describe the actual installed product base of that area</strong>, as a localized installed-base census dataset does not exist. High service volume correlates with customer density, service hub accessibility, and regional sales penetration.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Sales-to-Service Duration Table -->
+      <div id="tabDuration" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Sales-to-Service Duration Distribution Breakdown</h3>
+            <p class="section-desc" style="margin-bottom: 0;">Service records grouped by completed years from sale to first recorded service across 5,085 confirmed MFC leak records.</p>
+          </div>
+          <button class="btn-export" id="exportDurationCsvBtn" style="padding: 6px 14px; font-size: 12px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export Duration CSV
+          </button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Duration Category</th>
+                <th>Elapsed Days Range</th>
+                <th class="col-num">Service Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Cumulative Records</th>
+                <th class="col-num">Cumulative Share %</th>
+                <th style="width: 220px;">Distribution Profile</th>
+                <th style="text-align: center;">Failure Phase</th>
+              </tr>
+            </thead>
+            <tbody id="durationTableBody"></tbody>
+            <tfoot id="durationTableFoot"></tfoot>
+          </table>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <h4 class="section-subheading" style="font-size: 14px; margin-bottom: 4px;">&lt; 1 Year Cohort — Quarterly Elapsed Breakdown</h4>
+          <p class="section-desc" style="margin-bottom: 12px; font-size: 12px;">Further subdivision of the 1,081 records occurring within 0–364 elapsed days after sale.</p>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Quarter</th>
+                  <th>Elapsed Duration</th>
+                  <th>Elapsed Days Range</th>
+                  <th class="col-num">Service Records</th>
+                  <th class="col-num">Share of &lt; 1 Yr (%)</th>
+                  <th style="width: 220px;">Volume Distribution</th>
+                  <th style="text-align: center;">Failure Phase</th>
+                </tr>
+              </thead>
+              <tbody id="underOneYearTableBody"></tbody>
+              <tfoot id="underOneYearTableFoot"></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    
+      <!-- Tab 6: ODU Breakdown & Unresolved Barcode Audit Table -->
+      <div id="tabOdu" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">ODU-Wise MFC Leakage Breakdown</h3>
+            <p class="section-desc" style="margin-bottom: 0;">Verified service records categorized by outdoor unit chassis from standard barcode format.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-export" id="exportOduCsvBtn" style="padding: 6px 14px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Export ODU Summary (CSV)
+            </button>
+            <button class="btn-export" id="exportUnresolvedOduCsvBtn" style="padding: 6px 14px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Export 195 Legacy Records (CSV)
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Rank</th>
+                <th>ODU Category</th>
+                <th>Chassis Description</th>
+                <th class="col-num">Confirmed Leaks</th>
+                <th class="col-num" style="width: 140px;">Classified Share %</th>
+                <th class="col-num" style="width: 140px;">Total Leak Share %</th>
+                <th style="width: 200px;">Volume Distribution</th>
+                <th style="text-align: center; width: 140px;">Validation Status</th>
+              </tr>
+            </thead>
+            <tbody id="oduTableBody"></tbody>
+            <tfoot id="oduTableFoot"></tfoot>
+          </table>
+        </div>
+
+        <!-- Unresolved / Legacy Barcode Audit Register (194 Records) -->
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-default);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #B3261E; display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Verified Legacy Barcodes Register (195 Records Resolved to C ODU)
+              </h4>
+              <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">
+                These 195 confirmed MFC leakage records bearing legacy prefix <code>BXX0103...</code> (WSI-RIVERINE-24C / WSI-VENTURI-24C 2.0 Ton) are verified C ODU chassis and fully classified into C ODU.
+              </p>
+            </div>
+            <input type="text" id="oduUnresolvedSearch" class="search-input" placeholder="Search SR No, Barcode, Model..." style="width: 260px;">
+          </div>
+
+          <div class="table-container" style="max-height: 380px; overflow-y: auto;">
+            <table class="data-table" style="font-size: 11.5px;">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">#</th>
+                  <th>SR No</th>
+                  <th>Barcode</th>
+                  <th>FULL MODEL</th>
+                  <th>Short Model</th>
+                  <th style="width: 70px;">Version</th>
+                  <th style="width: 95px;">Created Date</th>
+                  <th style="width: 90px;">Inhouse/Import</th>
+                  <th>Audit Comment</th>
+                </tr>
+              </thead>
+              <tbody id="oduUnresolvedTableBody"></tbody>
+            </table>
+          </div>
+          <div id="oduUnresolvedCountInfo" style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; text-align: right;">
+            Showing 195 of 195 legacy records
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 7: Coated vs Non-Coated Breakdown & Register -->
+      <div id="tabCoated" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Year-Wise Coated vs. Non-Coated MFC Condenser Distribution</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Classified strictly from "Used Spare Parts" column evidence with zero inference from other fields.</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="segmented-control" id="tableCoatedPopToggle">
+              <button class="segmented-btn active" data-pop="pop4031">Confirmed Leaks (5,721)</button>
+              <button class="segmented-btn" data-pop="pop4253">All Service (5,943)</button>
+            </div>
+            <button class="btn-export" id="exportCoatedCsvBtn" style="padding: 6px 14px; font-size: 12px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Export Coated Analysis (CSV)
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 90px;">Year</th>
+                <th class="col-num" style="color: #D97706;">Coated Quantity</th>
+                <th class="col-num" style="width: 130px; color: #D97706;">Coated Share %</th>
+                <th class="col-num" style="color: #0B3A70;">Non-Coated Quantity</th>
+                <th class="col-num" style="width: 140px; color: #0B3A70;">Non-Coated Share %</th>
+                <th class="col-num">Total Classified</th>
+                <th class="col-num" style="color: var(--text-secondary);">Blank Spare Parts</th>
+                <th class="col-num" style="color: var(--text-secondary);">Other Spare Parts</th>
+                <th style="text-align: center; width: 130px;">Audit Status</th>
+              </tr>
+            </thead>
+            <tbody id="coatedTableBody"></tbody>
+            <tfoot id="coatedTableFoot"></tfoot>
+          </table>
+        </div>
+
+        <!-- 220 Coated Records Register -->
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-default);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #C47E00; display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                Verified Coated Condenser Replacement Register (370 Records)
+              </h4>
+              <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">
+                All records containing <code>Color-Black For Coatec Series</code> in "Used Spare Parts" (Parts <code>SPAR.AIRC.446435</code> &amp; <code>446436</code>).
+              </p>
+            </div>
+            <input type="text" id="coatedRecordsSearch" class="search-input" placeholder="Search SR No, Barcode, Model, Center..." style="width: 280px;">
+          </div>
+
+          <div class="table-container" style="max-height: 420px; overflow-y: auto;">
+            <table class="data-table" style="font-size: 11.5px;">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">#</th>
+                  <th style="width: 95px;">SR No</th>
+                  <th style="width: 130px;">Barcode</th>
+                  <th>FULL MODEL</th>
+                  <th style="width: 75px;">Short Model</th>
+                  <th style="width: 60px;">Year</th>
+                  <th style="width: 110px;">Service Center</th>
+                  <th>Used Spare Parts Evidence</th>
+                </tr>
+              </thead>
+              <tbody id="coatedRecordsTableBody"></tbody>
+            </table>
+          </div>
+          <div id="coatedRecordsCountInfo" style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; text-align: right;">
+            Showing 370 of 370 coated records
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 8: Replace vs. Repair Table -->
+      <div id="tabReplaceRepair" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;" id="replaceRepairTableTitle">Year-Wise Replace vs. Repair Breakdown (Confirmed Leaks (5,721 Records))</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service action distribution categorized strictly from the "Replace/ Repair" column.</p>
+          </div>
+          <button id="btnExportReplaceRepairCSV" class="btn-export">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export Replace vs. Repair (CSV)
+          </button>
+        </div>
+
+        <div class="table-container" style="margin-bottom: 20px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>YEAR</th>
+                <th class="col-num" style="color: #0B3A70;">REPLACE QTY</th>
+                <th class="col-num" style="color: #0B3A70;">REPLACE SHARE %</th>
+                <th class="col-num" style="color: #0D9488;">REPAIR QTY</th>
+                <th class="col-num" style="color: #0D9488;">REPAIR SHARE %</th>
+                <th class="col-num">TOTAL ACTIONS</th>
+                <th style="text-align: center;">DOMINANT ACTION</th>
+                <th style="text-align: center;">VALIDATION STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="replaceRepairSummaryTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div>Walton Hi-Tech Industries PLC | Process Development Division &amp; MFC Service Engineering</div>
+      <div>Source: <code>Microchannel Master File_October 2025.xlsx</code>, <code>Service &amp; Sales Data Nov 25.xlsx</code>, <code>Sales &amp; Service Data Dec25.xlsx</code>, <code>Sales &amp; Service Data Jan 26.xlsx</code>, <code>Service &amp; Sales Data Feb 2026.xlsx</code>, <code>Service &amp; Sales Data Mar 2026.xlsx</code> &amp; <code>Service &amp; Sales Data-Apr-26.xlsx</code>, <code>Service &amp; Sales Data May-26.xlsx</code>, <code>Service &amp; Sales Data Jun 26.xlsx</code>, <code>Service &amp; Sales Data Jul-26.xlsx</code> &amp; <code>Service &amp; Sales Data Aug 26.xlsx</code> | 5,721 Confirmed Leakage Records (100% Reconciled)</div>
+    </footer>
+
+    <!-- Modal for Inspecting Unclassified / Other Records -->
+    <div id="unclassifiedModal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber-600)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Unclassified / Other Records (55 Records)
+          </h3>
+          <button id="modalCloseBtn" class="modal-close-btn" title="Close modal">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-top: 0; color: var(--text-secondary); line-height: 1.5;">
+            These confirmed leakage records represent verified physical coil puncture or impact damage to the microchannel condenser that could not be assigned to the six primary metallurgical failure categories based <strong>solely on the "Expert Found Problems" text</strong>. They are preserved verbatim below:
+          </p>
+          <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 45px;">#</th>
+                  <th>Raw "Expert Found Problems" Description</th>
+                  <th class="col-num" style="width: 110px;">Record Count</th>
+                  <th class="col-num" style="width: 100px;">Share %</th>
+                </tr>
+              </thead>
+              <tbody id="unclassifiedTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="modalCloseBtn2" class="btn-primary" style="padding: 8px 20px;">Close Window</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JavaScript Datasets and Application Script -->
+  <script src="js/market_failure_data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

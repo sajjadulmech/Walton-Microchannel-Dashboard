@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walton RAC | Microchannel Market Analytics Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Top Header & Brand Bar (100% Viewport Width) -->
+  <header class="header-bar">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="assets/walton-logo.png" alt="Walton Logo" class="brand-logo">
+        <div class="header-titles">
+          <h1>Microchannel (MFC) Market Data Analytics</h1>
+          <p>Process Development Division | Multi-Year Technology &amp; Market Adoption Intelligence (2020 – August 2026)</p>
+        </div>
+      </div>
+
+      <!-- Multi-Dashboard Page Navigation -->
+      <nav class="page-nav" aria-label="Dashboard Navigation">
+        <a href="Microchannel Market Failure.html" class="page-nav-link" title="View Microchannel Market Failure Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Microchannel Market Failure
+        </a>
+        <a href="Microchannel Market Sales.html" class="page-nav-link active" title="View Market Sales Analytics Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Market Sales Analytics
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- KPI Metric Cards Grid (5 Cards) -->
+    <section class="kpi-grid">
+      <!-- Total Sales Analyzed -->
+      <div class="kpi-card primary-accent">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Total Sales Analyzed
+        </div>
+        <div class="kpi-value" id="kpiTotalSales">499,053</div>
+        <div class="kpi-subtext">Verified 2020 – Aug 2026 records</div>
+      </div>
+
+      <!-- Microchannel Units -->
+      <div class="kpi-card mfc">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.44.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          Microchannel (MFC) Units
+        </div>
+        <div class="kpi-value" id="kpiTotalMFC">183,789</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-mfc" id="kpiMFCShare">42.43% Market Share</span>
+        </div>
+      </div>
+
+      <!-- Copper Units -->
+      <div class="kpi-card cu">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="8" r="2.2"/><circle cx="5" cy="8" r="2.2"/><circle cx="12" cy="20" r="2.2"/><path d="M12 9V5M6.8 9.5l3.4 1.9M17.2 9.5l-3.4 1.9M12 15v3" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+          Copper / Non-MFC Units
+        </div>
+        <div class="kpi-value" id="kpiTotalCopper">249,344</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-cu" id="kpiCopperShare">57.57% Market Share</span>
+        </div>
+      </div>
+
+      <!-- Peak Adoption Year -->
+      <div class="kpi-card accent-subtle">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          Peak MFC Adoption Year
+        </div>
+        <div class="kpi-value" id="kpiPeakYear">2024 (60.43%)</div>
+        <div class="kpi-subtext">Major transition to Inhouse MFC</div>
+      </div>
+
+      <!-- Active MFC Catalog -->
+      <div class="kpi-card accent-subtle-2">
+        <div class="kpi-title">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Active MFC Catalog
+        </div>
+        <div class="kpi-value" id="kpiActiveModels">49 Models</div>
+        <div class="kpi-subtext" id="kpiModelSubtitle">29 Inhouse / 20 Import</div>
+      </div>
+    </section>
+
+    <!-- Full-Width Chart 1: Annual Sales Volume (MFC vs. Copper) Grouped Bar Chart -->
+    <section class="chart-card chart-card-full">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">
+            <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Annual Sales Volume (MFC vs. Copper)
+          </div>
+          <div class="chart-subtitle">Unit sales distribution across 2020 – 2026</div>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot mfc"></span> MFC Sales</span>
+          <span class="legend-item"><span class="legend-dot cu"></span> Copper Sales</span>
+        </div>
+      </div>
+      <div id="chartVolume" class="chart-container volume-container"></div>
+    </section>
+
+    <!-- Visual Charts Grid (2-Card Grid) -->
+    <section class="charts-grid">
+
+      <!-- Chart 3: MFC Tonnage Mix -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="3" y="4" width="18" height="4" rx="1.5"/><rect x="3" y="10" width="18" height="4" rx="1.5"/><rect x="3" y="16" width="18" height="4" rx="1.5"/></svg>
+              MFC Capacity Distribution (Tonnage Mix)
+            </div>
+            <div class="chart-subtitle">Breakdown across 1.0 TR, 1.5 TR, 2.0 TR, 4.0 TR, and 5.0 TR units</div>
+          </div>
+          <span class="badge-tag badge-mfc">Capacities</span>
+        </div>
+        <div id="chartCapacity" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 4: Outdoor Wise Sales (Donut Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11 2v10.5l7.4 7.4A10 10 0 1 0 11 2z"/><path d="M13 2.05v8.95l6.33 6.33A10.02 10.02 0 0 0 13 2.05z" opacity="0.35"/></svg>
+              Outdoor Wise Sales (2020–2026)
+            </div>
+            <div class="chart-subtitle">Transition from 100% Import C-Chassis to Inhouse H, F/M, J, Z, D</div>
+          </div>
+          <span class="badge-tag badge-mfc">Outdoor Wise Sales</span>
+        </div>
+        <div id="chartChassis" class="chart-container"></div>
+      </div>
+    </section>
+
+    <!-- Tabbed Data Explorer -->
+    <section class="explorer-card">
+      <div class="tabs-header">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="sales">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Year-Wise Sales Table
+          </button>
+          <button class="tab-btn" data-tab="catalog">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            49 Microchannel Catalog
+          </button>
+        </div>
+
+        <div class="tab-actions">
+          <button id="btnExport" class="btn-export">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Sales Table -->
+      <div id="tabSales" class="tab-content">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th class="col-num">MFC Sales (Units)</th>
+                <th class="col-num">Copper Sales (Units)</th>
+                <th class="col-num">Total Sales (Units)</th>
+                <th class="col-num" style="width: 180px;">MFC Share %</th>
+                <th class="col-num" style="width: 180px;">Copper Share %</th>
+                <th style="text-align: center;">Official Status</th>
+              </tr>
+            </thead>
+            <tbody id="salesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: 49 Model Catalog -->
+      <div id="tabCatalog" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <input type="text" id="catalogSearch" class="search-input" placeholder="Search model, chassis, version, or type...">
+          <div style="display: flex; gap: 8px;">
+            <button class="filter-chip active" data-filter="all">All (49)</button>
+            <button class="filter-chip" data-filter="Import">Import (20)</button>
+            <button class="filter-chip" data-filter="Inhouse">Inhouse Coated (29)</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px;">#</th>
+                <th>Full Model</th>
+                <th>Capacity</th>
+                <th>Chassis</th>
+                <th>Version Code</th>
+                <th>Manufacturing Origin</th>
+                <th>Coating Tech</th>
+                <th>Engineering Significance</th>
+              </tr>
+            </thead>
+            <tbody id="catalogTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div>Walton Hi-Tech Industries PLC | Process Development Division &amp; MFC Service Engineering</div>
+      <div>Source: <code>Microchannel Master File_October 2025.xlsx</code>, <code>Service &amp; Sales Data Nov 25.xlsx</code>, <code>Sales &amp; Service Data Dec25.xlsx</code>, <code>Sales &amp; Service Data Jan 26.xlsx</code>, <code>Service &amp; Sales Data Feb 2026.xlsx</code>, <code>Service &amp; Sales Data Mar 2026.xlsx</code>, <code>Service &amp; Sales Data-Apr-26.xlsx</code>, <code>Service &amp; Sales Data May-26.xlsx</code>, <code>Service &amp; Sales Data Jun 26.xlsx</code>, <code>Service &amp; Sales Data Jul-26.xlsx</code> &amp; <code>Service &amp; Sales Data Aug 26.xlsx</code> | 499,053 Sales Records (100% Mathematically Reconciled)</div>
+    </footer>
+
+    <!-- Global Floating Tooltip -->
+    <div id="chartTooltip" class="chart-tooltip"></div>
+
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/sales.js"></script>
+</body>
+</html>
