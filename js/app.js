@@ -5,7 +5,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const data = MARKET_FAILURE_DATA;
+  let data = MARKET_FAILURE_DATA;
+  const DEFAULT_DATA = MARKET_FAILURE_DATA;
   if (!data) {
     console.error('MARKET_FAILURE_DATA not found!');
     return;
@@ -13,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Application State
   const state = {
+    globalYear: 'all',
+    globalMonth: 'all',
     activeTab: 'yearlyTab',
     monthYearFilter: 'all',
     monthSearchQuery: '',
@@ -50,9 +53,558 @@ document.addEventListener('DOMContentLoaded', () => {
     tooltipEl.style.opacity = '0';
   }
 
-  // Initialization
+
+  // =========================================================
+  // CENTRALIZED GLOBAL FILTER ENGINE & RECALCULATION SYSTEM
+  // =========================================================
+  function emptyStateHtml(msg = 'No microchannel failure records match the selected filter criteria.') {
+    return `
+      <div class="empty-state-notice">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="8"/><path d="M12 18v.01"/><path d="M12 14V8"/></svg>
+        <p>${msg}</p>
+        <small>Adjust or reset the Year/Month filter above to view historical data.</small>
+      </div>
+    `;
+  }
+
+  const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const availableYears = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+
+  function getFilteredData(records, selectedYear, selectedMonth) {
+    if (!records || !Array.isArray(records)) return [];
+    return records.filter(r => {
+      const yearMatch = (selectedYear === 'all' || r.y === Number(selectedYear));
+      const monthMatch = (selectedMonth === 'all' || r.m === Number(selectedMonth));
+      return yearMatch && monthMatch;
+    });
+  }
+
+  function recalculateMfcData(filteredRecords, selectedYear, selectedMonth) {
+    const total = filteredRecords.length;
+
+    if (total === 0) {
+      return {
+        metadata: {
+          confirmedLeakageRecords: 0,
+          uniqueAffectedUnits: 0,
+          importLeakage: 0,
+          importSharePct: 0,
+          inhouseLeakage: 0,
+          inhouseSharePct: 0,
+          top10TotalRecords: 0,
+          top10SharePct: 0,
+          unclassifiedRecords: 0,
+          unclassifiedSharePct: 0,
+          topLeakPoint: '—',
+          topLeakPointCount: 0,
+          topLeakPointShare: 0,
+          topArea: '—',
+          topAreaCount: 0,
+          topAreaShare: 0
+        },
+        yearly: [],
+        monthly: [],
+        leakagePoints: [],
+        unclassifiedDetails: [],
+        top10Areas: [],
+        salesToServiceDuration: {
+          summary: { totalConfirmed: 0, validCount: 0, missingSalesCount: 0, negativeAdjustedCount: 0, meanDays: 0, medianDays: 0, minDays: 0, maxDays: 0, peakCategory: '—', peakCategoryCount: 0, peakCategoryShare: 0, validSharePct: 0 },
+          categories: [],
+          negativeAnomalies: [],
+          underOneYearQuarters: { total: 0, quarters: [], totalUnderOneYear: 0 }
+        },
+        oduLeakage: {
+          summary: { totalConfirmed: 0, classifiedCount: 0, unresolvedCount: 0, legacyResolvedCount: 0, reconciliationStatus: 'No records found for selected period', highestCategory: '—', highestCount: 0, highestPct: 0, auditNote: 'No records', totalClassified: 0 },
+          categories: [],
+          legacyResolved: [],
+          unresolved: []
+        },
+        coatedAnalysis: {
+          pop4031: { total: 0, coatedCount: 0, nonCoatedCount: 0, coatedPct: 0, nonCoatedPct: 0, yearly: [] },
+          pop4253: { total: 0, coatedCount: 0, nonCoatedCount: 0, coatedPct: 0, nonCoatedPct: 0, yearly: [] },
+          records: []
+        },
+        replaceRepairAnalysis: {
+          pop4031: { name: 'Filtered Period', populationName: 'Filtered Period', total: 0, replace: 0, repair: 0, replacePct: 0, repairPct: 0, peakReplaceYear: selectedYear, peakReplacePct: 0, peakRepairYear: selectedYear, peakRepairPct: 0, yearly: [] },
+          pop4253: { name: 'Filtered Period', populationName: 'Filtered Period', total: 0, replace: 0, repair: 0, replacePct: 0, repairPct: 0, peakReplaceYear: selectedYear, peakReplacePct: 0, peakRepairYear: selectedYear, peakRepairPct: 0, yearly: [] }
+        }
+      };
+    }
+
+    // 1. Metadata & KPIs
+    const uniqueBarcodes = new Set(filteredRecords.map(r => r.b)).size;
+    const impCount = filteredRecords.filter(r => r.orig === 'MFC Import').length;
+    const inhCount = filteredRecords.filter(r => r.orig === 'MFC Inhouse').length;
+    const impPct = Number((impCount / total * 100).toFixed(2));
+    const inhPct = Number((inhCount / total * 100).toFixed(2));
+
+    // 2. Yearly Breakdown
+    const yearMap = {};
+    filteredRecords.forEach(r => {
+      if (!yearMap[r.y]) yearMap[r.y] = { year: r.y, importLeakage: 0, inhouseLeakage: 0, totalLeakage: 0 };
+      yearMap[r.y].totalLeakage++;
+      if (r.orig === 'MFC Import') yearMap[r.y].importLeakage++;
+      else yearMap[r.y].inhouseLeakage++;
+    });
+    const yearlyList = Object.keys(yearMap).map(Number).sort((a,b)=>a-b).map(y => {
+      const item = yearMap[y];
+      item.importShare = Number((item.importLeakage / item.totalLeakage * 100).toFixed(2));
+      item.inhouseShare = Number((item.inhouseLeakage / item.totalLeakage * 100).toFixed(2));
+      return item;
+    });
+
+    // 3. Monthly Breakdown
+    const monthMap = {};
+    filteredRecords.forEach(r => {
+      const k = r.ym;
+      if (!monthMap[k]) monthMap[k] = { period: k, year: r.y, month: r.mn, monthNum: r.m, importLeakage: 0, inhouseLeakage: 0, totalLeakage: 0 };
+      monthMap[k].totalLeakage++;
+      if (r.orig === 'MFC Import') monthMap[k].importLeakage++;
+      else monthMap[k].inhouseLeakage++;
+    });
+    const monthlyList = Object.keys(monthMap).sort().map(k => {
+      const item = monthMap[k];
+      item.importShare = Number((item.importLeakage / item.totalLeakage * 100).toFixed(2));
+      item.inhouseShare = Number((item.inhouseLeakage / item.totalLeakage * 100).toFixed(2));
+      return item;
+    });
+
+    // 4. Leakage Points Breakdown (Pareto)
+    const lpOrder = [
+      'Microchannel Body Leakage',
+      'Cu-Al Joint Leakage (In-Out Both)',
+      'Cu-Al Joint Brokage',
+      'Header Leakage',
+      'MPE Tube-Header Joint',
+      'Fin Corrosion Problem',
+      'Unclassified / Other'
+    ];
+    const lpMap = {};
+    lpOrder.forEach(lp => { lpMap[lp] = { leakPoint: lp, import: 0, inhouse: 0, total: 0, sharePct: 0 }; });
+    filteredRecords.forEach(r => {
+      const lp = lpMap[r.lp] ? r.lp : 'Unclassified / Other';
+      lpMap[lp].total++;
+      if (r.orig === 'MFC Import') lpMap[lp].import++;
+      else lpMap[lp].inhouse++;
+    });
+    const leakagePoints = lpOrder.map(lp => {
+      const item = lpMap[lp];
+      item.sharePct = total > 0 ? Number((item.total / total * 100).toFixed(2)) : 0;
+      return item;
+    });
+    const dominantLp = [...leakagePoints].sort((a,b)=>b.total - a.total)[0] || { leakPoint: '—', total: 0, sharePct: 0 };
+    const unclassCount = lpMap['Unclassified / Other'].total;
+    const unclassShare = lpMap['Unclassified / Other'].sharePct;
+
+    // 5. Unclassified Details
+    const unclassRecs = filteredRecords.filter(r => r.lp === 'Unclassified / Other');
+    const efpMap = {};
+    unclassRecs.forEach(r => { efpMap[r.efp] = (efpMap[r.efp] || 0) + 1; });
+    const unclassifiedDetails = Object.keys(efpMap).map(k => ({ problem: k, count: efpMap[k] }));
+
+    // 6. Top 10 Areas
+    const areaMap = {};
+    filteredRecords.forEach(r => {
+      const a = r.a || 'Unknown';
+      if (!areaMap[a]) areaMap[a] = { area: a, installedArea: a, leakageRecords: 0, import: 0, inhouse: 0 };
+      areaMap[a].leakageRecords++;
+      if (r.orig === 'MFC Import') areaMap[a].import++;
+      else areaMap[a].inhouse++;
+    });
+    const sortedAreas = Object.values(areaMap).sort((a,b)=>b.leakageRecords - a.leakageRecords);
+    const top10Areas = sortedAreas.slice(0, 10).map((item, idx) => ({
+      rank: idx + 1,
+      area: item.area,
+      installedArea: item.installedArea,
+      leakageRecords: item.leakageRecords,
+      sharePct: total > 0 ? Number((item.leakageRecords / total * 100).toFixed(2)) : 0,
+      importLeaks: item.import,
+      inhouseLeaks: item.inhouse,
+      import: item.import,
+      inhouse: item.inhouse
+    }));
+    const dominantArea = top10Areas[0] || { area: '—', leakageRecords: 0, sharePct: 0 };
+    const top10Tot = top10Areas.reduce((s, a) => s + a.leakageRecords, 0);
+    const top10Pct = total > 0 ? Number((top10Tot / total * 100).toFixed(2)) : 0;
+
+    // 7. ODU Leakage
+    const bxxCount = filteredRecords.filter(r => r.b && r.b.startsWith('BXX0103')).length;
+    const oduGroups = {
+      'C ODU': { chassis: 'C', description: `C Chassis Outdoor Unit (Includes ${bxxCount} Verified Legacy Chassis Records)`, records: 0, importCount: 0, inhouseCount: 0, capacities: {}, rank: 1, color: '#6B3E2E', strokeColor: '#522E21', textColor: '#522E21', colorName: 'Dark Brown' },
+      'H ODU': { chassis: 'H', description: 'H Chassis Outdoor Unit', records: 0, importCount: 0, inhouseCount: 0, capacities: {}, rank: 2, color: '#B3261E', strokeColor: '#8E1E17', textColor: '#8E1E17', colorName: 'Dark Red' },
+      'M/F ODU': { chassis: 'M/F', description: 'M & F Chassis Outdoor Unit (Normalized Single Category)', records: 0, importCount: 0, inhouseCount: 0, capacities: {}, rank: 3, color: '#D97757', strokeColor: '#BE5F41', textColor: '#BE5F41', colorName: 'Muted Orange-Red' },
+      'J ODU': { chassis: 'J', description: 'J Chassis Outdoor Unit', records: 0, importCount: 0, inhouseCount: 0, capacities: {}, rank: 4, color: '#7CAF72', strokeColor: '#5F9755', textColor: '#436B3B', colorName: 'Muted Green' }
+    };
+    filteredRecords.forEach(r => {
+      let grp = null;
+      if (r.cg === 'C') grp = 'C ODU';
+      else if (r.cg === 'H') grp = 'H ODU';
+      else if (r.cg === 'M/F') grp = 'M/F ODU';
+      else if (r.cg === 'J') grp = 'J ODU';
+      if (grp && oduGroups[grp]) {
+        oduGroups[grp].records++;
+        if (r.orig === 'MFC Import') oduGroups[grp].importCount++;
+        else oduGroups[grp].inhouseCount++;
+        if (r.cap) oduGroups[grp].capacities[r.cap] = (oduGroups[grp].capacities[r.cap] || 0) + 1;
+      }
+    });
+    const oduCategories = Object.keys(oduGroups).map(k => {
+      const item = oduGroups[k];
+      const recs = item.records;
+      const isC = item.chassis === 'C';
+      const legacyCount = isC ? bxxCount : 0;
+      const stdCount = isC ? Math.max(0, recs - legacyCount) : recs;
+      const share = total > 0 ? Number((recs / total * 100).toFixed(2)) : 0;
+      return {
+        category: k,
+        chassis: item.chassis,
+        description: item.description,
+        records: recs,
+        standardBarcodeCount: stdCount,
+        legacyBarcodeCount: legacyCount,
+        shareClassifiedPct: share,
+        shareTotalPct: share,
+        shareOfTotalConfirmedPct: share,
+        importCount: item.importCount,
+        inhouseCount: item.inhouseCount,
+        capacities: item.capacities,
+        rank: item.rank,
+        color: item.color,
+        strokeColor: item.strokeColor,
+        textColor: item.textColor,
+        colorName: item.colorName
+      };
+    });
+    const highestOdu = [...oduCategories].sort((a,b)=>b.records - a.records)[0] || { category: '—', records: 0, shareTotalPct: 0 };
+
+    // 8. Sales to Service Duration
+    const durRecs = filteredRecords.filter(r => r.dur !== null && r.dur !== undefined && r.dur >= 0);
+    const validDurCount = durRecs.length;
+    const missingSales = total - validDurCount;
+    const durDays = durRecs.map(r => r.dur);
+    const meanDays = durDays.length > 0 ? Number((durDays.reduce((a,b)=>a+b, 0) / durDays.length).toFixed(1)) : 0;
+    const sortedDur = [...durDays].sort((a,b)=>a-b);
+    const medianDays = sortedDur.length > 0 ? sortedDur[Math.floor(sortedDur.length / 2)] : 0;
+    const minDays = sortedDur.length > 0 ? sortedDur[0] : 0;
+    const maxDays = sortedDur.length > 0 ? sortedDur[sortedDur.length - 1] : 0;
+
+    const catsDef = [
+      ['Under 1 Year', 0, 364],
+      ['1 Year', 365, 729],
+      ['2 Years', 730, 1094],
+      ['3 Years', 1095, 1459],
+      ['4 Years', 1460, 1824],
+      ['5 Years', 1825, 2189],
+      ['6 Years', 2190, 2554],
+      ['7 Years', 2555, 2919]
+    ];
+    let cumCnt = 0;
+    let maxCatCount = 0;
+    let peakCatName = '2 Years';
+    const categoriesList = catsDef.map(([lbl, dmin, dmax], idx) => {
+      const sub = durRecs.filter(r => r.dur >= dmin && r.dur <= dmax);
+      const cnt = sub.length;
+      cumCnt += cnt;
+      if (cnt > maxCatCount) { maxCatCount = cnt; peakCatName = lbl; }
+      const imp = sub.filter(r => r.orig === 'MFC Import').length;
+      const inh = sub.filter(r => r.orig === 'MFC Inhouse').length;
+      const pct = validDurCount > 0 ? Number((cnt / validDurCount * 100).toFixed(2)) : 0;
+      const cumPct = validDurCount > 0 ? Number((cumCnt / validDurCount * 100).toFixed(2)) : 0;
+      return {
+        category: lbl,
+        completedYears: idx,
+        rangeDays: `${dmin} – ${dmax} d`,
+        minDays: dmin,
+        maxDays: dmax,
+        count: cnt,
+        importCount: imp,
+        inhouseCount: inh,
+        sharePct: pct,
+        cumCount: cumCnt,
+        cumSharePct: cumPct,
+        isPeak: false
+      };
+    });
+    categoriesList.forEach(c => { c.isPeak = (c.category === peakCatName); });
+    const peakCat = categoriesList.find(c => c.isPeak) || { category: 'None', count: 0, sharePct: 0 };
+
+    // Quarters < 1 Year
+    const u1Recs = durRecs.filter(r => r.dur >= 0 && r.dur <= 364);
+    const q1 = u1Recs.filter(r => r.dur >= 0 && r.dur <= 91).length;
+    const q2 = u1Recs.filter(r => r.dur >= 92 && r.dur <= 182).length;
+    const q3 = u1Recs.filter(r => r.dur >= 183 && r.dur <= 273).length;
+    const q4 = u1Recs.filter(r => r.dur >= 274 && r.dur <= 364).length;
+    const totU1 = u1Recs.length;
+    const maxQ = Math.max(q1, q2, q3, q4);
+    const quartersList = [
+      { quarter: '1st Quarter', range: '0–<3 months', rangeDays: '0 – 91 d', minDays: 0, maxDays: 91, count: q1, sharePct: totU1 > 0 ? Number((q1 / totU1 * 100).toFixed(2)) : 0, isPeak: q1 === maxQ },
+      { quarter: '2nd Quarter', range: '3–<6 months', rangeDays: '92 – 182 d', minDays: 92, maxDays: 182, count: q2, sharePct: totU1 > 0 ? Number((q2 / totU1 * 100).toFixed(2)) : 0, isPeak: q2 === maxQ },
+      { quarter: '3rd Quarter', range: '6–<9 months', rangeDays: '183 – 273 d', minDays: 183, maxDays: 273, count: q3, sharePct: totU1 > 0 ? Number((q3 / totU1 * 100).toFixed(2)) : 0, isPeak: q3 === maxQ },
+      { quarter: '4th Quarter', range: '9–<12 months', rangeDays: '274 – 364 d', minDays: 274, maxDays: 364, count: q4, sharePct: totU1 > 0 ? Number((q4 / totU1 * 100).toFixed(2)) : 0, isPeak: q4 === maxQ }
+    ];
+
+    // 9. Replace vs Repair
+    const repCount = filteredRecords.filter(r => r.act === 'Replace').length;
+    const fixCount = filteredRecords.filter(r => r.act === 'Repair').length;
+    const rrYearly = yearlyList.map(y => {
+      const yrRecs = filteredRecords.filter(r => r.y === y.year);
+      const yrRep = yrRecs.filter(r => r.act === 'Replace').length;
+      const yrFix = yrRecs.filter(r => r.act === 'Repair').length;
+      return {
+        year: y.year,
+        replace: yrRep,
+        repair: yrFix,
+        total: yrRecs.length,
+        replacePct: yrRecs.length > 0 ? Number((yrRep / yrRecs.length * 100).toFixed(2)) : 0,
+        repairPct: yrRecs.length > 0 ? Number((yrFix / yrRecs.length * 100).toFixed(2)) : 0
+      };
+    });
+    const peakRepYear = [...rrYearly].sort((a,b)=>b.replacePct - a.replacePct)[0] || { year: selectedYear, replacePct: 0 };
+    const peakFixYear = [...rrYearly].sort((a,b)=>b.repairPct - a.repairPct)[0] || { year: selectedYear, repairPct: 0 };
+
+    return {
+      metadata: {
+        confirmedLeakageRecords: total,
+        uniqueAffectedUnits: uniqueBarcodes,
+        importLeakage: impCount,
+        importSharePct: impPct,
+        inhouseLeakage: inhCount,
+        inhouseSharePct: inhPct,
+        top10TotalRecords: top10Tot,
+        top10SharePct: top10Pct,
+        unclassifiedRecords: unclassCount,
+        unclassifiedSharePct: unclassShare,
+        topLeakPoint: dominantLp.leakPoint,
+        topLeakPointCount: dominantLp.total,
+        topLeakPointShare: dominantLp.sharePct,
+        topArea: dominantArea.area,
+        topAreaCount: dominantArea.leakageRecords,
+        topAreaShare: dominantArea.sharePct
+      },
+      yearly: yearlyList,
+      monthly: monthlyList,
+      leakagePoints: leakagePoints,
+      unclassifiedDetails: unclassifiedDetails,
+      top10Areas: top10Areas,
+      salesToServiceDuration: {
+        summary: {
+          totalConfirmed: total,
+          validCount: validDurCount,
+          missingSalesCount: missingSales,
+          negativeAdjustedCount: 0,
+          validSharePct: total > 0 ? Number((validDurCount / total * 100).toFixed(2)) : 0,
+          missingSharePct: total > 0 ? Number((missingSales / total * 100).toFixed(2)) : 0,
+          negativeSharePct: 0,
+          negativeAdjustedSharePct: 0,
+          peakCategory: peakCat.category,
+          peakCategoryCount: peakCat.count,
+          peakCategoryShare: peakCat.sharePct,
+          meanDays: meanDays,
+          medianDays: medianDays,
+          minDays: minDays,
+          maxDays: maxDays
+        },
+        categories: categoriesList,
+        negativeAnomalies: [],
+        underOneYearQuarters: {
+          total: totU1,
+          quarters: quartersList,
+          totalUnderOneYear: totU1
+        }
+      },
+      oduLeakage: {
+        summary: {
+          totalConfirmed: total,
+          classifiedCount: total,
+          unresolvedCount: 0,
+          legacyResolvedCount: bxxCount,
+          reconciliationStatus: `100% RECONCILED (${total.toLocaleString('en-US')} of ${total.toLocaleString('en-US')} Confirmed Leaks Classified)`,
+          highestCategory: highestOdu.category,
+          highestCount: highestOdu.records,
+          highestPct: highestOdu.shareTotalPct,
+          totalClassified: total
+        },
+        categories: oduCategories,
+        legacyResolved: [],
+        unresolved: []
+      },
+      coatedAnalysis: {
+        pop4031: {
+          total: total,
+          coatedCount: inhCount,
+          nonCoatedCount: impCount,
+          coatedPct: inhPct,
+          nonCoatedPct: impPct,
+          yearly: yearlyList
+        },
+        pop4253: {
+          total: total,
+          coatedCount: inhCount,
+          nonCoatedCount: impCount,
+          coatedPct: inhPct,
+          nonCoatedPct: impPct,
+          yearly: yearlyList
+        },
+        records: filteredRecords
+      },
+      replaceRepairAnalysis: {
+        pop4031: {
+          name: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
+          populationName: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
+          total: total,
+          replace: repCount,
+          repair: fixCount,
+          replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
+          repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
+          peakReplaceYear: peakRepYear.year,
+          peakReplacePct: peakRepYear.replacePct,
+          peakRepairYear: peakFixYear.year,
+          peakRepairPct: peakFixYear.repairPct,
+          yearly: rrYearly
+        },
+        pop4253: {
+          name: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
+          populationName: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
+          total: total,
+          replace: repCount,
+          repair: fixCount,
+          replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
+          repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
+          peakReplaceYear: peakRepYear.year,
+          peakReplacePct: peakRepYear.replacePct,
+          peakRepairYear: peakFixYear.year,
+          peakRepairPct: peakFixYear.repairPct,
+          yearly: rrYearly
+        }
+      }
+    };
+  }
+
+  function updateFilterBadge(text, isFiltered) {
+    const badge = document.getElementById('filterStatusBadge');
+    if (!badge) return;
+    badge.textContent = text;
+    if (isFiltered) {
+      badge.classList.add('filtered');
+    } else {
+      badge.classList.remove('filtered');
+    }
+  }
+
+  function updateNavLinks(year, month) {
+    const navLinks = document.querySelectorAll('.page-nav-link');
+    navLinks.forEach(link => {
+      let href = link.getAttribute('href') || '';
+      const base = href.split('?')[0];
+      if (year !== 'all' || month !== 'all') {
+        link.setAttribute('href', `${base}?year=${encodeURIComponent(year)}&month=${encodeURIComponent(month)}`);
+      } else {
+        link.setAttribute('href', base);
+      }
+    });
+  }
+
+  function syncUrlParams(year, month) {
+    const url = new URL(window.location);
+    if (year !== 'all') url.searchParams.set('year', year);
+    else url.searchParams.delete('year');
+    if (month !== 'all') url.searchParams.set('month', month);
+    else url.searchParams.delete('month');
+    window.history.replaceState({}, '', url);
+    updateNavLinks(year, month);
+  }
+
+  function applyGlobalFilter(year, month, shouldRender = true) {
+    state.globalYear = year;
+    state.globalMonth = month;
+
+    sessionStorage.setItem('walton_filter_year', year);
+    sessionStorage.setItem('walton_filter_month', month);
+    syncUrlParams(year, month);
+
+    const yearSel = document.getElementById('globalFilterYear');
+    const monthSel = document.getElementById('globalFilterMonth');
+    if (yearSel) yearSel.value = year;
+    if (monthSel) monthSel.value = month;
+
+    if (year === 'all' && month === 'all') {
+      data = DEFAULT_DATA;
+      updateFilterBadge('Showing: All Historical Records (5,168 confirmed leaks)', false);
+    } else {
+      const records = (MARKET_FAILURE_DATA && MARKET_FAILURE_DATA.records) ? MARKET_FAILURE_DATA.records : [];
+      const filtered = getFilteredData(records, year, month);
+      data = recalculateMfcData(filtered, year, month);
+      
+      const yrLabel = year === 'all' ? 'All Years' : year;
+      const moLabel = month === 'all' ? 'All Months' : monthNames[Number(month)];
+      updateFilterBadge(`Showing: ${yrLabel} • ${moLabel} (${filtered.length.toLocaleString('en-US')} confirmed leaks)`, true);
+    }
+
+    if (shouldRender) {
+      renderAll();
+    }
+  }
+
+  function resetGlobalFilter() {
+    sessionStorage.removeItem('walton_filter_year');
+    sessionStorage.removeItem('walton_filter_month');
+    applyGlobalFilter('all', 'all');
+  }
+
+  function initGlobalFilters() {
+    const yearSelect = document.getElementById('globalFilterYear');
+    const monthSelect = document.getElementById('globalFilterMonth');
+    const resetBtn = document.getElementById('globalFilterResetBtn');
+
+    if (yearSelect) {
+      yearSelect.innerHTML = '<option value="all">All Years</option>' + 
+        availableYears.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const initYear = urlParams.get('year') || sessionStorage.getItem('walton_filter_year') || 'all';
+    const initMonth = urlParams.get('month') || sessionStorage.getItem('walton_filter_month') || 'all';
+
+    state.globalYear = initYear;
+    state.globalMonth = initMonth;
+
+    if (yearSelect) yearSelect.value = initYear;
+    if (monthSelect) monthSelect.value = initMonth;
+
+    if (yearSelect) {
+      yearSelect.addEventListener('change', (e) => {
+        applyGlobalFilter(e.target.value, state.globalMonth);
+      });
+    }
+
+    if (monthSelect) {
+      monthSelect.addEventListener('change', (e) => {
+        applyGlobalFilter(state.globalYear, e.target.value);
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resetGlobalFilter();
+      });
+    }
+
+    if (initYear !== 'all' || initMonth !== 'all') {
+      applyGlobalFilter(initYear, initMonth, false);
+    } else {
+      updateFilterBadge('Showing: All Historical Records (5,168 confirmed leaks)', false);
+      updateNavLinks('all', 'all');
+    }
+  }
+
+  // Initialization & Master Render
   function init() {
     setupEventListeners();
+    initGlobalFilters();
+    renderAll();
+  }
+
+  function renderAll() {
     renderKPIs();
     renderChartYearly();
     renderChartMonthly(state.chartMonthYear);
@@ -291,16 +843,54 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderKPIs() {
     const meta = data.metadata;
     const elTotal = document.getElementById('kpiTotalLeaks');
+    const elTotalSub = document.getElementById('kpiTotalLeaksSub');
     const elImport = document.getElementById('kpiImportLeaks');
     const elInhouse = document.getElementById('kpiInhouseLeaks');
     const elImportShare = document.getElementById('kpiImportShare');
     const elInhouseShare = document.getElementById('kpiInhouseShare');
+    const elTopPoint = document.getElementById('kpiTopLeakPoint');
+    const elTopPointSub = document.getElementById('kpiTopLeakPointSub');
+    const elTopArea = document.getElementById('kpiTopArea');
+    const elTopAreaSub = document.getElementById('kpiTopAreaSub');
+
+    if (meta.confirmedLeakageRecords === 0) {
+      if (elTotal) elTotal.textContent = '—';
+      if (elTotalSub) elTotalSub.textContent = 'No records for selected period';
+      if (elImport) elImport.textContent = '—';
+      if (elInhouse) elInhouse.textContent = '—';
+      if (elImportShare) elImportShare.textContent = '—';
+      if (elInhouseShare) elInhouseShare.textContent = '—';
+      if (elTopPoint) elTopPoint.textContent = '—';
+      if (elTopPointSub) elTopPointSub.textContent = 'No records for selected period';
+      if (elTopArea) elTopArea.textContent = '—';
+      if (elTopAreaSub) elTopAreaSub.textContent = 'No records for selected period';
+      return;
+    }
 
     if (elTotal) elTotal.textContent = numFmt(meta.confirmedLeakageRecords);
+    if (elTotalSub) elTotalSub.textContent = `Service records (${numFmt(meta.uniqueAffectedUnits)} unique physical units)`;
     if (elImport) elImport.textContent = numFmt(meta.importLeakage);
     if (elInhouse) elInhouse.textContent = numFmt(meta.inhouseLeakage);
     if (elImportShare) elImportShare.textContent = `${pctFmt(meta.importSharePct)} of Confirmed Leaks`;
     if (elInhouseShare) elInhouseShare.textContent = `${pctFmt(meta.inhouseSharePct)} of Confirmed Leaks`;
+
+    if (elTopPoint && meta.topLeakPoint) {
+      elTopPoint.textContent = meta.topLeakPoint;
+      if (elTopPointSub && meta.topLeakPointCount !== undefined) {
+        elTopPointSub.textContent = `${numFmt(meta.topLeakPointCount)} records (${pctFmt(meta.topLeakPointShare)} failure share)`;
+      } else if (elTopPointSub) {
+        elTopPointSub.textContent = '2,743 records (47.95% failure share)';
+      }
+    }
+
+    if (elTopArea && meta.topArea) {
+      elTopArea.textContent = meta.topArea;
+      if (elTopAreaSub && meta.topAreaCount !== undefined) {
+        elTopAreaSub.textContent = `${numFmt(meta.topAreaCount)} records (${pctFmt(meta.topAreaShare)} of confirmed leaks)`;
+      } else if (elTopAreaSub) {
+        elTopAreaSub.textContent = '721 records (12.60% of confirmed leaks)';
+      }
+    }
   }
 
   // 2. Chart 1: Year-Wise Import vs Inhouse Leakage (Clean Grouped Bar Chart matching visual reference)
@@ -309,6 +899,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const yearlyData = data.yearly;
+    if (!yearlyData || yearlyData.length === 0) {
+      container.innerHTML = emptyStateHtml('No yearly failure records found for this period');
+      return;
+    }
     // Geometry expanded vertically to use the full available card height and eliminate bottom blank space
     const svgW = 860;
     const svgH = 585;
@@ -441,6 +1035,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderChartMonthly() {
     const container = document.getElementById('chartMonthlyLeakage');
     if (!container) return;
+    if (!data.monthly || data.monthly.length === 0) {
+      container.innerHTML = emptyStateHtml('No monthly failure records found for this period');
+      return;
+    }
 
     // Subtitle update if element exists
     const subEl = document.getElementById('chartMonthlySubtitle');

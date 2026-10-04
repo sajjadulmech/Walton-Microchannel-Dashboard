@@ -24,6 +24,10 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
           Microchannel Market Failure
         </a>
+        <a href="Evaporator Market Failure.html" class="page-nav-link" title="View Evaporator Market Failure Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+          Evaporator Market Failure
+        </a>
         <a href="Microchannel Market Sales.html" class="page-nav-link active" title="View Market Sales Analytics Dashboard">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
           Market Sales Analytics
@@ -33,6 +37,50 @@
   </header>
 
   <div class="dashboard-container">
+    <!-- Global Year + Month Filter Bar -->
+    <section class="global-filter-bar">
+      <div class="filter-controls-group">
+        <div class="filter-control-item">
+          <label for="globalFilterYear">YEAR</label>
+          <div class="select-wrapper">
+            <select id="globalFilterYear" class="filter-select" aria-label="Filter by Year">
+              <option value="all">All Years</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-control-item">
+          <label for="globalFilterMonth">MONTH</label>
+          <div class="select-wrapper">
+            <select id="globalFilterMonth" class="filter-select" aria-label="Filter by Month">
+              <option value="all">All Months</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="globalFilterResetBtn" class="btn-filter-reset" title="Reset filters to All Years and All Months">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+      </div>
+
+      <div class="filter-status-wrapper">
+        <span class="filter-status-badge" id="filterStatusBadge">Showing: All Historical Records</span>
+      </div>
+    </section>
+
     <!-- KPI Metric Cards Grid (5 Cards) -->
     <section class="kpi-grid">
       <!-- Total Sales Analyzed -->

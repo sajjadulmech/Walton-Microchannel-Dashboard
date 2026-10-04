@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walton RAC | Evaporator Market Failure</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Top Header & Brand Bar (100% Viewport Width) -->
+  <header class="header-bar">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="assets/walton-logo.png" alt="Walton Logo" class="brand-logo">
+        <div class="header-titles">
+          <h1>Evaporator Market Failure</h1>
+          <p>Process Development Division | Post-Sales Service &amp; Evaporator Reliability Intelligence (2021 – August 2026)</p>
+        </div>
+      </div>
+
+      <!-- Multi-Dashboard Page Navigation -->
+      <nav class="page-nav" aria-label="Dashboard Navigation">
+        <a href="Microchannel Market Failure.html" class="page-nav-link" title="View Microchannel Market Failure Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Microchannel Market Failure
+        </a>
+        <a href="Evaporator Market Failure.html" class="page-nav-link active" title="View Evaporator Market Failure Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+          Evaporator Market Failure
+        </a>
+        <a href="Microchannel Market Sales.html" class="page-nav-link" title="View Market Sales Analytics Dashboard">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          Market Sales Analytics
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- Global Year + Month Filter Bar -->
+    <section class="global-filter-bar">
+      <div class="filter-controls-group">
+        <div class="filter-control-item">
+          <label for="globalFilterYear">YEAR</label>
+          <div class="select-wrapper">
+            <select id="globalFilterYear" class="filter-select" aria-label="Filter by Year">
+              <option value="all">All Years</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-control-item">
+          <label for="globalFilterMonth">MONTH</label>
+          <div class="select-wrapper">
+            <select id="globalFilterMonth" class="filter-select" aria-label="Filter by Month">
+              <option value="all">All Months</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="globalFilterResetBtn" class="btn-filter-reset" title="Reset filters to All Years and All Months">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+      </div>
+
+      <div class="filter-status-wrapper">
+        <span class="filter-status-badge" id="filterStatusBadge">Showing: All Historical Records</span>
+      </div>
+    </section>
+
+    <!-- KPI Metric Cards Grid (6 Cards) -->
+    <section class="kpi-grid kpi-grid-6">
+      <!-- Total Confirmed Leakage Records -->
+      <div class="kpi-card leak">
+        <div class="kpi-title" title="Total Confirmed Leakage">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Total Leakage
+        </div>
+        <div class="kpi-value" id="kpiTotalLeaks">13,770</div>
+        <div class="kpi-subtext" id="kpiTotalLeaksSub" title="11,885 unique units">11,885 unique units</div>
+      </div>
+
+      <!-- Inverter Evaporator Leakage -->
+      <div class="kpi-card primary-accent">
+        <div class="kpi-title" title="Inverter Evaporator Leakage">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Inverter Leakage
+        </div>
+        <div class="kpi-value" id="kpiInverterLeaks">8,889</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-mfc" id="kpiInverterShare">64.55% Share</span>
+        </div>
+      </div>
+
+      <!-- Non-Inverter Evaporator Leakage -->
+      <div class="kpi-card cu">
+        <div class="kpi-title" title="Non-Inverter Evaporator Leakage">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          Non-Inverter Leakage
+        </div>
+        <div class="kpi-value" id="kpiNonInverterLeaks">4,881</div>
+        <div class="kpi-subtext">
+          <span class="kpi-badge badge-cu" id="kpiNonInverterShare">35.45% Share</span>
+        </div>
+      </div>
+
+      <!-- Dominant Leakage Point -->
+      <div class="kpi-card accent-brown">
+        <div class="kpi-title" title="Dominant Leakage Point">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Dominant Leak Point
+        </div>
+        <div class="kpi-value text-val" id="kpiTopLeakPoint" title="U-Bend Leakage">U-Bend Leakage</div>
+        <div class="kpi-subtext" id="kpiTopLeakPointSub" title="8,724 records (63.36%)">8,724 records (63.36%)</div>
+      </div>
+
+      <!-- Top Installed Area -->
+      <div class="kpi-card accent-amber">
+        <div class="kpi-title" title="Top Installed Area">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Top Installed Area
+        </div>
+        <div class="kpi-value text-val" id="kpiTopArea" title="CTG Road">CTG Road</div>
+        <div class="kpi-subtext" id="kpiTopAreaSub" title="3,358 records (24.39%)">3,358 records (24.39%)</div>
+      </div>
+
+      <!-- Repeat Interventions -->
+      <div class="kpi-card accent-subtle">
+        <div class="kpi-title" title="Repeat Service Visits">
+          <svg class="kpi-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Repeat Service Visits
+        </div>
+        <div class="kpi-value" id="kpiRepeatVisits">1,885</div>
+        <div class="kpi-subtext" id="kpiRepeatVisitsSub" title="13.69% rate (1,548 units)">13.69% rate (1,548 units)</div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid (Section 1: Macro Trajectory & Seasonality) -->
+    <section class="charts-grid">
+      <!-- Chart 1: Year-Wise Inverter vs Non-Inverter Leakage -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="20" height="20" fill="#0B3A70"><rect x="3" y="11" width="4.5" height="10" rx="2.25"/><rect x="9.75" y="3" width="4.5" height="18" rx="2.25"/><rect x="16.5" y="7" width="4.5" height="14" rx="2.25"/></svg>
+              Year-Wise Evaporator Leakage (Inverter vs. Non-Inverter)
+            </div>
+            <div class="chart-subtitle">Annual confirmed evaporator leakage records (2021 – August 2026)</div>
+          </div>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-color" style="background: #0B3A70; width: 14px; height: 11px; border-radius: 3px;"></span> Inverter</span>
+            <span class="legend-item"><span class="legend-color" style="background: #D7C2A5; width: 14px; height: 11px; border-radius: 3px;"></span> Non-Inverter</span>
+          </div>
+        </div>
+        <div id="chartYearlyLeakage" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 2: Month-Wise Multi-Year Seasonality Curve -->
+      <div class="chart-card">
+        <div class="chart-header" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Month-Wise Evaporator Leakage
+            </div>
+            <div id="chartMonthlySubtitle" class="chart-subtitle">Monthly Evaporator leakage records — Year-over-Year Comparison</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-color" style="background: #0B3A70;"></span> 2026</span>
+              <span class="legend-item"><span class="legend-color" style="background: #D9534F;"></span> 2025</span>
+              <span class="legend-item"><span class="legend-color" style="background: #0D9488;"></span> 2024</span>
+              <span class="legend-item"><span class="legend-color" style="background: #D97706;"></span> 2023</span>
+            </div>
+            <select id="chartMonthYearSelect" class="form-select" style="font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border-default); background: var(--bg-card); color: var(--text-primary); font-weight: 600;">
+              <option value="all">All Years (Compare)</option>
+              <option value="2026">2026 Only</option>
+              <option value="2025">2025 Only</option>
+              <option value="2024">2024 Only</option>
+              <option value="2023">2023 Only</option>
+              <option value="2022">2022 Only</option>
+              <option value="2021">2021 Only</option>
+            </select>
+          </div>
+        </div>
+        <div id="chartMonthlyLeakage" class="chart-container"></div>
+      </div>
+    </section>
+
+    <!-- Visual Charts Grid (Section 2: Root-Cause & Geography) -->
+    <section class="charts-grid">
+      <!-- Chart 3: Leakage Point Breakdown (Pareto Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              Leakage Point Breakdown (Source: Expert Found Problems)
+            </div>
+            <div class="chart-subtitle">Sequential severity progression: Dark Brown (High) → Light Green (Low)</div>
+          </div>
+        </div>
+        <div id="chartLeakagePoints" class="chart-container"></div>
+      </div>
+
+      <!-- Chart 4: Top 10 Installed Areas -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Top 10 Installed Areas (Service Centers)
+            </div>
+            <div class="chart-subtitle">Concentration of post-sales evaporator failure complaints across Bangladesh</div>
+          </div>
+          <span class="badge-tag badge-cu">Top 10 = 77.94% of Leaks</span>
+        </div>
+        <div id="chartTopAreas" class="chart-container"></div>
+      </div>
+    </section>
+
+    <!-- Section 3: Sales-to-Service Operating Duration Analysis -->
+    <section class="charts-grid">
+      <!-- Chart 5: Sales-to-Service Duration -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Sales-to-Service Duration
+            </div>
+            <div class="chart-subtitle">Distribution of evaporator service records by time since sale</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-color" style="background: #8B2E2E;"></span> Peak (1-2 Years)</div>
+              <div class="legend-item"><span class="legend-color" style="background: linear-gradient(135deg, #B83B3B, #D97757, #A8D5A2);"></span> Distribution</div>
+            </div>
+            <span class="badge-tag badge-mfc">Duration Metric</span>
+          </div>
+        </div>
+        <div id="chartSalesToService" class="chart-container"></div>
+      </div>
+
+      <!-- Data Validation & Audit Transparency Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Data Validation &amp; Audit Transparency
+            </div>
+            <div class="chart-subtitle">Strict date audit across 13,770 confirmed evaporator failure records</div>
+          </div>
+          <span class="badge-tag badge-leak">Quality Audited</span>
+        </div>
+        
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid">
+            <div class="audit-metric-card valid">
+              <div class="audit-metric-val">13,679</div>
+              <div class="audit-metric-lbl">Valid Analyzed (99.34%)</div>
+            </div>
+            <div class="audit-metric-card clean" title="850 records recovered using Factory Delivery Date">
+              <div class="audit-metric-val" style="color: #0D9488;">850</div>
+              <div class="audit-metric-lbl">Factory Fallback (6.17%)</div>
+            </div>
+            <div class="audit-metric-card missing">
+              <div class="audit-metric-val">52</div>
+              <div class="audit-metric-lbl">Missing Sales (0.38%)</div>
+            </div>
+            <div class="audit-metric-card negative">
+              <div class="audit-metric-val">39</div>
+              <div class="audit-metric-lbl">Negative Adj. (0.28%)</div>
+            </div>
+          </div>
+
+          <div class="audit-note-box">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Audit Insight: Operating Age Trajectory
+            </div>
+            <p class="audit-note-text">
+              Over <strong>67.8%</strong> of all confirmed evaporator leakage complaints occur within the first 2 completed years after sale/delivery (<strong>&lt; 1 Year</strong>: 16.13%, <strong>1 Year</strong>: 24.30%, <strong>2 Years</strong>: 27.33%), with peak failure incidence concentrated in <strong>2 Years (730–1,094 days)</strong> (3,739 records) and <strong>1 Year (365–729 days)</strong> (3,324 records). Mean lifespan is <strong>959.8 days (2.63 yrs)</strong> with median of <strong>833.0 days (2.28 yrs)</strong>.
+            </p>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 10px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Lifecycle Baseline:</strong>
+              <span style="color: #0B3A70; font-weight: 700;">13,679 records</span> (99.34% coverage via retail sales month &amp; factory delivery fallback; 850 recovered, 52 unmapped, 39 negative anomalies).
+            </div>
+            <button id="exportDurationCsvBtn" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              Export Duration CSV →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3B: < 1 Year Service Duration by Quarter -->
+    <section class="charts-grid">
+      <!-- Chart 5B: < 1 Year Duration by Quarter (Distribution Pie / Donut Chart) -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              &lt; 1 Year Service Duration by Quarter
+            </div>
+            <div class="chart-subtitle">Overall distribution of 2,207 records (0–364 days)</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="badge-tag badge-leak">Cohort Split</span>
+          </div>
+        </div>
+        <div id="chartUnderOneYearQuarters" class="chart-container"></div>
+      </div>
+
+      <!-- < 1 Year Cohort Quarterly Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              &lt; 1 Year Cohort Audit &amp; Distribution
+            </div>
+            <div class="chart-subtitle">Strict 4-quarter subdivision across 2,207 &lt; 1 Year service records</div>
+          </div>
+          <span class="badge-tag badge-mfc">2,207 Records (100%)</span>
+        </div>
+
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid">
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" style="color: #D97706;">700</div>
+              <div class="audit-metric-lbl">1st Qtr: 0–&lt;3m (31.7%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" style="color: #0B3A70;">466</div>
+              <div class="audit-metric-lbl">2nd Qtr: 3–&lt;6m (21.1%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
+              <div class="audit-metric-val" style="color: #0D9488;">408</div>
+              <div class="audit-metric-lbl">3rd Qtr: 6–&lt;9m (18.5%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #536778;">
+              <div class="audit-metric-val" style="color: #536778;">633</div>
+              <div class="audit-metric-lbl">4th Qtr: 9–&lt;12m (28.7%)</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Cohort Baseline:</strong>
+              <span style="color: #0B3A70; font-weight: 700;">2,207 records</span> from the validated &lt; 1 Year (0–364 days) duration dataset.
+            </div>
+            <span class="badge-tag badge-mfc" style="font-size: 11px;">100% Reconciled</span>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Infant Mortality &amp; Early Failure Trajectory
+            </div>
+            <p class="audit-note-text">
+              Within the first operating year, failure concentration is heaviest in the <strong>1st Quarter (0–&lt;3 months: 31.7%, 700 records)</strong> driven by shipping stress and factory joint micro-leaks. Failures ease in the <strong>2nd (21.1%, 466 records)</strong> and <strong>3rd (18.5%, 408 records)</strong> quarters before rising in the <strong>4th Quarter (28.7%, 633 records)</strong> ahead of the 1-year annual warranty inspection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Capacity / Tonnage Distribution & Fleet Audit -->
+    <section class="charts-grid">
+      <!-- Chart 6: Capacity / Tonnage Distribution -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              Capacity / Tonnage Distribution
+            </div>
+            <div class="chart-subtitle">Confirmed evaporator leakage records by air conditioner tonnage</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span class="badge-tag" style="background: #E8EEF5; color: #0B3A70; border: 1px solid #C4D7ED;">#1 1.5 Ton</span>
+            <span class="badge-tag" style="background: #FBEAE9; color: #B3261E; border: 1px solid #F5C6C4;">#2 2.0 Ton</span>
+            <span class="badge-tag" style="background: #FEF3E7; color: #D97706; border: 1px solid #FBD9B5;">#3 1.0 Ton</span>
+          </div>
+        </div>
+        <div id="chartCapacity" class="chart-container"></div>
+      </div>
+
+      <!-- Capacity Classification Audit & Reconciliation Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Capacity Classification Audit &amp; Fleet Reliability
+            </div>
+            <div class="chart-subtitle">Strict capacity mapping across 13,770 confirmed evaporator records</div>
+          </div>
+          <span class="badge-tag badge-mfc">100% Fully Resolved</span>
+        </div>
+        
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid">
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" style="color: #0B3A70;">8,233</div>
+              <div class="audit-metric-lbl">1.5 Ton (59.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #B3261E;">
+              <div class="audit-metric-val" style="color: #B3261E;">3,411</div>
+              <div class="audit-metric-lbl">2.0 Ton (24.8%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" style="color: #D97706;">1,832</div>
+              <div class="audit-metric-lbl">1.0 Ton (13.3%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
+              <div class="audit-metric-val" style="color: #0D9488;">294</div>
+              <div class="audit-metric-lbl">2.5 &amp; 4.0T (2.1%)</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 12px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Fleet Workhorse Status:</strong> 
+              <span style="color: #0B3A70; font-weight: 700;">13,770 Classified (100.0%)</span> | 
+              <span style="color: #536778;">1.5 Ton Inverter represents 71.0% of its volume</span>
+            </div>
+            <button id="btnJumpToCapacityTable" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              Inspect Capacity Data →
+            </button>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Fleet Workhorse Engineering Insights
+            </div>
+            <p class="audit-note-text">
+              The <strong>1.5 Ton capacity (18,000 BTU/hr)</strong> represents Walton's core residential and commercial fleet workhorse, bearing nearly <strong>60% of all failure complaints</strong>. U-bend joint leakage constitutes the dominant mode across all tonnages (65.4% in 1.5 Ton, 60.2% in 2.0 Ton, and 63.9% in 1.0 Ton), showing uniform thermal-mechanical vulnerability.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Replace vs. Repair Action Dynamics -->
+    <section class="charts-grid">
+      <!-- Chart 7: Year-Wise Replace vs. Repair -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              Year-Wise Replace vs. Repair Action Crossover
+            </div>
+            <div class="chart-subtitle">Shift from replacement (72.5% in 2021) to field repair brazing (54.9% in 2026)</div>
+          </div>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-color" style="background: #0B3A70;"></span> Replace</span>
+            <span class="legend-item"><span class="legend-color" style="background: #0D9488;"></span> Repair</span>
+          </div>
+        </div>
+        <div id="chartReplaceVsRepair" class="chart-container"></div>
+      </div>
+
+      <!-- Replace vs Repair Action Audit Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">
+              <svg class="chart-title-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Service Protocol &amp; Cost-Containment Audit
+            </div>
+            <div class="chart-subtitle">Audit of field corrective actions: 100% reconciled across 13,770 records</div>
+          </div>
+          <span class="badge-tag badge-replace">2025 Crossover Year</span>
+        </div>
+
+        <div class="duration-audit-content">
+          <div class="audit-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));">
+            <div class="audit-metric-card" style="border-left: 3px solid #536778;">
+              <div class="audit-metric-val" id="rrMetricTotal" style="color: #0B3A70;">13,770</div>
+              <div class="audit-metric-lbl">Total Service Actions</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0B3A70;">
+              <div class="audit-metric-val" id="rrMetricReplace" style="color: #0B3A70;">7,379</div>
+              <div class="audit-metric-lbl" id="rrMetricReplaceLbl">Replace (53.59%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0D9488;">
+              <div class="audit-metric-val" id="rrMetricRepair" style="color: #0D9488;">5,874</div>
+              <div class="audit-metric-lbl" id="rrMetricRepairLbl">Repair (42.66%)</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #D97706;">
+              <div class="audit-metric-val" style="color: #B45309;">2021 (72.5%)</div>
+              <div class="audit-metric-lbl">Peak Replace Year</div>
+            </div>
+            <div class="audit-metric-card" style="border-left: 3px solid #0F766E;">
+              <div class="audit-metric-val" style="color: #0F766E;">2026 (54.9%)</div>
+              <div class="audit-metric-lbl">Peak Repair Year</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-hover); border-radius: 6px; padding: 10px 14px; margin-top: 14px; border: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div style="font-size: 12px; color: var(--text-primary);">
+              <strong>Component Selectivity:</strong> Hairpin body leaks (86.0%) and clamp fretting leaks (84.4%) require complete assembly replacement, while U-bends (48.4%) permit field torch brazing.
+            </div>
+            <button id="btnJumpToReplaceRepairTable" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+              View Action Table →
+            </button>
+          </div>
+
+          <div class="audit-note-box" style="margin-top: 12px;">
+            <div class="audit-note-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              Field Heat-Sink Engineering Warning
+            </div>
+            <p class="audit-note-text">
+              In <strong>63.82%</strong> of repeat service cases (988 units), units suffer recurrence at the <em>exact same component mode</em>. Technicians repairing U-bends with oxy-acetylene torches cause adjacent joint thermal fatigue without heat-sink protective gels.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabbed Structured Data Explorer -->
+    <section class="explorer-card">
+      <div class="tabs-header">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="yearlyTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            Year-Wise Leakage
+          </button>
+          <button class="tab-btn" data-tab="monthlyTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Month-Wise Matrix
+          </button>
+          <button class="tab-btn" data-tab="pointsTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Leakage Points (Pareto)
+          </button>
+          <button class="tab-btn" data-tab="areasTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Top 15 Installed Areas
+          </button>
+          <button class="tab-btn" data-tab="durationTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Operating Duration
+          </button>
+          <button class="tab-btn" data-tab="capacityTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Capacity &amp; Technology
+          </button>
+          <button class="tab-btn" data-tab="modelsTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Top 20 Models
+          </button>
+          <button class="tab-btn" data-tab="replaceRepairTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Replace vs. Repair
+          </button>
+          <button class="tab-btn" data-tab="repeatTab">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Repeat Visits
+          </button>
+        </div>
+
+        <div class="tab-actions">
+          <button id="btnExport" class="btn-export">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-amber-primary)" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export Evaporator Summary (CSV)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Year-Wise Leakage Table -->
+      <div id="tabYearly" class="tab-content" style="display: block;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Year-Wise Confirmed Evaporator Leakage Records</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service records: 2021 through August 2026 (13,770 total records).</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Source: <code>Evaporator Leak Data (2021-2026 till Aug).xlsx</code></span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 90px;">Year</th>
+                <th class="col-num">Total Complaints</th>
+                <th class="col-num">Unique Units</th>
+                <th class="col-num">Repeat Visits</th>
+                <th class="col-num">Inverter</th>
+                <th class="col-num">Non-Inverter</th>
+                <th class="col-num">Replaced</th>
+                <th class="col-num">Repaired</th>
+                <th class="col-num">Warranty (YES)</th>
+                <th class="col-num">Warranty (NO)</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyYearly"></tbody>
+            <tfoot id="tfootYearly"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Month-Wise Table -->
+      <div id="tabMonthly" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Month-by-Year Multi-Year Seasonality Matrix</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Complete 68-month service timeline with search and yearly filter chips.</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div class="filter-chips" id="monthYearFilters">
+              <button class="filter-chip active" data-year="all">All</button>
+              <button class="filter-chip" data-year="2026">2026</button>
+              <button class="filter-chip" data-year="2025">2025</button>
+              <button class="filter-chip" data-year="2024">2024</button>
+              <button class="filter-chip" data-year="2023">2023</button>
+              <button class="filter-chip" data-year="2022">2022</button>
+              <button class="filter-chip" data-year="2021">2021</button>
+            </div>
+            <input type="text" id="monthSearch" class="search-input" placeholder="Search month (e.g. 2026-04)..." style="width: 190px;">
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 120px;">Period</th>
+                <th style="width: 80px;">Year</th>
+                <th style="width: 80px;">Month</th>
+                <th class="col-num">Total Complaints</th>
+                <th class="col-num">Inverter</th>
+                <th class="col-num">Non-Inverter</th>
+                <th class="col-num">Replaced</th>
+                <th class="col-num">Repaired</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyMonthly"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Leakage Points Table -->
+      <div id="tabPoints" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Evaporator Leakage Points Classification (Pareto Ranking)</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Verified service records categorized from Expert Found Problems.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Derived strictly from <code>Expert Found Problem</code></span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px; text-align: center;">Rank</th>
+                <th>Leakage Point Category &amp; Description</th>
+                <th class="col-num">Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Cumul %</th>
+                <th class="col-num">Replaced</th>
+                <th class="col-num">Repaired</th>
+                <th class="col-num">Inverter / Non-Inv</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPoints"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 4: Top 15 Areas Table -->
+      <div id="tabAreas" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Top 15 Installed Areas (Service Centers)</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Top 15 centers account for 86.41% of national evaporator leakage workload.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Top Epicenter: <code>CTG Road</code> (3,358 complaints)</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px; text-align: center;">Rank</th>
+                <th>Service Center</th>
+                <th>Regional Zone</th>
+                <th class="col-num">Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Cumul %</th>
+                <th>Dominant Leak Mode</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyAreas"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 5: Duration Table -->
+      <div id="tabDuration" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Sales-to-Service Operating Duration Distribution</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Elapsed time from sales/delivery date to complaint creation: 13,679 valid non-negative records.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Mean: <strong>959.8 Days</strong> | Median: <strong>833.0 Days</strong></span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Completed Years</th>
+                <th>Elapsed Days Range</th>
+                <th class="col-num">Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Cumulative %</th>
+                <th>Operational Lifecycle Phase</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySalesToService"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 6: Capacity & Technology Table -->
+      <div id="tabCapacity" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Fleet Capacity &amp; Technology Breakdown</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Distribution across tonnage sizes and inverter vs non-inverter architectures.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">1.5 Ton: 59.79% | 2.0 Ton: 24.77% | 1.0 Ton: 13.30%</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nominal Capacity</th>
+                <th class="col-num">Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Inverter %</th>
+                <th class="col-num">Non-Inverter %</th>
+                <th>Dominant Leak Mode</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyCapacity"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 7: Top 20 Models Table -->
+      <div id="tabModels" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Top 20 Models by Evaporator Leak Volume</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Detailed model series, chassis, and failure concentrations (48.21% of national fleet leaks).</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">Top Model: <code>WSI-INVERNA(SUPERSAVER)-18H[PLASMA]</code> (923 units)</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 60px; text-align: center;">Rank</th>
+                <th>Model With Version</th>
+                <th>Base Model</th>
+                <th>Capacity</th>
+                <th>Technology</th>
+                <th class="col-num">Records</th>
+                <th class="col-num">Share %</th>
+                <th class="col-num">Cumul %</th>
+                <th>Primary Leak Mode</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyModels"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 8: Replace vs. Repair Table -->
+      <div id="tabReplaceRepair" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 id="replaceRepairTableTitle" class="section-subheading" style="margin-bottom: 2px;">Year-Wise Replace vs. Repair Evolution</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Tracking the transition from high-cost replacement to authorized field repair brazing.</p>
+          </div>
+          <button id="btnExportReplaceRepairCSV" class="btn-export" style="font-size: 11.5px; padding: 4px 10px;">
+            Export Action CSV
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 100px;">Year</th>
+                <th class="col-num">Total Complaints</th>
+                <th class="col-num">Replace Action</th>
+                <th class="col-num">Repair Action</th>
+                <th class="col-num">Replace &amp; Repair</th>
+                <th class="col-num">Gas Charge Only</th>
+                <th class="col-num">Other Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyReplaceRepair"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 9: Repeat Visits Table -->
+      <div id="tabRepeat" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 class="section-subheading" style="margin-bottom: 2px;">Service Visit Frequency &amp; Recurrence Distribution</h3>
+            <p style="font-size: 12.5px; color: var(--text-secondary); margin: 0;">Barcodes experiencing single vs multiple post-sales evaporator failure interventions.</p>
+          </div>
+          <span style="font-size: 12px; color: var(--text-secondary);">1,548 units experienced multiple service visits</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: center;">Visit Frequency</th>
+                <th class="col-num">Distinct Units</th>
+                <th class="col-num">Units Share %</th>
+                <th class="col-num">Total Service Events</th>
+                <th class="col-num">Events Share %</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyRepeat"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Floating Chart Tooltip -->
+  <div id="chartTooltip" class="chart-tooltip"></div>
+
+  <!-- Scripts -->
+  <script src="js/evaporator_data.js"></script>
+  <script src="js/evaporator_app.js"></script>
+</body>
+</html>

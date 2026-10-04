@@ -4,7 +4,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const data = DASHBOARD_DATA.optionB; // Production view: Option B Official
+  let data = DASHBOARD_DATA.optionB;
+  const DEFAULT_DATA = DASHBOARD_DATA.optionB;
   const catalog = DASHBOARD_DATA.activeCatalog || DASHBOARD_DATA.modelsCatalog;
 
   const numFmt = (num) => Number(num).toLocaleString('en-US');
@@ -14,6 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTab = 'sales';
   let catalogFilter = 'all';
   let searchQuery = '';
+  const filterState = {
+    globalYear: 'all',
+    globalMonth: 'all'
+  };
 
   // Tooltip
   let tooltipEl = document.getElementById('chartTooltip');
@@ -37,8 +42,233 @@ document.addEventListener('DOMContentLoaded', () => {
     tooltipEl.classList.remove('visible');
   }
 
+
+  function emptyStateHtml(msg = 'No sales records match the selected filter criteria.') {
+    return `
+      <div class="empty-state-notice">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="8"/><path d="M12 18v.01"/><path d="M12 14V8"/></svg>
+        <p>${msg}</p>
+        <small>Adjust or reset the Year/Month filter above to view historical data.</small>
+      </div>
+    `;
+  }
+
+  // =========================================================
+  // CENTRALIZED GLOBAL FILTER ENGINE & RECALCULATION SYSTEM
+  // =========================================================
+  const monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const availableYears = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+
+  function getFilteredMonthlySales(records, selectedYear, selectedMonth) {
+    if (!records || !Array.isArray(records)) return [];
+    return records.filter(r => {
+      const yearMatch = (selectedYear === 'all' || r.year === Number(selectedYear));
+      const monthMatch = (selectedMonth === 'all' || r.month === Number(selectedMonth));
+      return yearMatch && monthMatch;
+    });
+  }
+
+  function recalculateSalesData(filteredRecs, selectedYear, selectedMonth) {
+    const totSales = filteredRecs.reduce((s, r) => s + r.total, 0);
+    const totMFC = filteredRecs.reduce((s, r) => s + r.mfc, 0);
+    const totCopper = filteredRecs.reduce((s, r) => s + r.copper, 0);
+    const mfcShare = totSales > 0 ? Number((totMFC / totSales * 100).toFixed(2)) : 0;
+    const copperShare = totSales > 0 ? Number((totCopper / totSales * 100).toFixed(2)) : 0;
+
+    const capMix = { '1.0 TR (12K)': 0, '1.5 TR (18K)': 0, '2.0 TR (24K)': 0, '4.0 TR (48K)': 0, '5.0 TR (60K)': 0 };
+    filteredRecs.forEach(r => {
+      if (r.caps) {
+        Object.entries(r.caps).forEach(([k, v]) => {
+          capMix[k] = (capMix[k] || 0) + v;
+        });
+      }
+    });
+
+    const chassisMix = { C: 0, H: 0, FM: 0, J: 0, Z: 0, D: 0 };
+    filteredRecs.forEach(r => {
+      if (r.chassis) {
+        Object.entries(r.chassis).forEach(([k, v]) => {
+          chassisMix[k] = (chassisMix[k] || 0) + v;
+        });
+      }
+    });
+
+    let breakdown = [];
+    if (selectedYear === 'all') {
+      const yrMap = {};
+      filteredRecs.forEach(r => {
+        const y = r.year;
+        if (!yrMap[y]) yrMap[y] = { year: String(y), mfc: 0, copper: 0, total: 0 };
+        yrMap[y].mfc += r.mfc;
+        yrMap[y].copper += r.copper;
+        yrMap[y].total += r.total;
+      });
+      breakdown = Object.keys(yrMap).map(Number).sort((a,b)=>a-b).map(y => {
+        const d = yrMap[y];
+        const tot = d.total;
+        return {
+          year: String(y),
+          mfc: d.mfc,
+          copper: d.copper,
+          total: tot,
+          mfcShare: tot > 0 ? Number((d.mfc / tot * 100).toFixed(2)) : 0,
+          copperShare: tot > 0 ? Number((d.copper / tot * 100).toFixed(2)) : 0
+        };
+      });
+    } else {
+      breakdown = filteredRecs.map(r => {
+        const tot = r.total;
+        return {
+          year: r.monthName,
+          mfc: r.mfc,
+          copper: r.copper,
+          total: tot,
+          mfcShare: tot > 0 ? Number((r.mfc / tot * 100).toFixed(2)) : 0,
+          copperShare: tot > 0 ? Number((r.copper / tot * 100).toFixed(2)) : 0
+        };
+      });
+    }
+
+    const peakItem = [...breakdown].sort((a,b)=>b.mfcShare - a.mfcShare)[0] || { year: '—', mfcShare: 0 };
+
+    return {
+      totalSales: totSales,
+      totalMFC: totMFC,
+      totalCopper: totCopper,
+      mfcShare: mfcShare,
+      copperShare: copperShare,
+      peakYear: peakItem.year,
+      peakShare: peakItem.mfcShare,
+      yearly: breakdown,
+      capacityMix: capMix,
+      chassisMix: chassisMix
+    };
+  }
+
+  function updateFilterBadge(text, isFiltered) {
+    const badge = document.getElementById('filterStatusBadge');
+    if (!badge) return;
+    badge.textContent = text;
+    if (isFiltered) {
+      badge.classList.add('filtered');
+    } else {
+      badge.classList.remove('filtered');
+    }
+  }
+
+  function updateNavLinks(year, month) {
+    const navLinks = document.querySelectorAll('.page-nav-link');
+    navLinks.forEach(link => {
+      let href = link.getAttribute('href') || '';
+      const base = href.split('?')[0];
+      if (year !== 'all' || month !== 'all') {
+        link.setAttribute('href', `${base}?year=${encodeURIComponent(year)}&month=${encodeURIComponent(month)}`);
+      } else {
+        link.setAttribute('href', base);
+      }
+    });
+  }
+
+  function syncUrlParams(year, month) {
+    const url = new URL(window.location);
+    if (year !== 'all') url.searchParams.set('year', year);
+    else url.searchParams.delete('year');
+    if (month !== 'all') url.searchParams.set('month', month);
+    else url.searchParams.delete('month');
+    window.history.replaceState({}, '', url);
+    updateNavLinks(year, month);
+  }
+
+  function applyGlobalFilter(year, month, shouldRender = true) {
+    filterState.globalYear = year;
+    filterState.globalMonth = month;
+
+    sessionStorage.setItem('walton_filter_year', year);
+    sessionStorage.setItem('walton_filter_month', month);
+    syncUrlParams(year, month);
+
+    const yearSel = document.getElementById('globalFilterYear');
+    const monthSel = document.getElementById('globalFilterMonth');
+    if (yearSel) yearSel.value = year;
+    if (monthSel) monthSel.value = month;
+
+    if (year === 'all' && month === 'all') {
+      data = DEFAULT_DATA;
+      updateFilterBadge('Showing: All Historical Records (499,053 units)', false);
+    } else {
+      const records = (DASHBOARD_DATA && DASHBOARD_DATA.monthlySales) ? DASHBOARD_DATA.monthlySales : [];
+      const filtered = getFilteredMonthlySales(records, year, month);
+      data = recalculateSalesData(filtered, year, month);
+
+      const yrLabel = year === 'all' ? 'All Years' : year;
+      const moLabel = month === 'all' ? 'All Months' : monthNames[Number(month)];
+      updateFilterBadge(`Showing: ${yrLabel} • ${moLabel} (${data.totalSales.toLocaleString('en-US')} units)`, true);
+    }
+
+    if (shouldRender) {
+      renderAll();
+    }
+  }
+
+  function resetGlobalFilter() {
+    sessionStorage.removeItem('walton_filter_year');
+    sessionStorage.removeItem('walton_filter_month');
+    applyGlobalFilter('all', 'all');
+  }
+
+  function initGlobalFilters() {
+    const yearSelect = document.getElementById('globalFilterYear');
+    const monthSelect = document.getElementById('globalFilterMonth');
+    const resetBtn = document.getElementById('globalFilterResetBtn');
+
+    if (yearSelect) {
+      yearSelect.innerHTML = '<option value="all">All Years</option>' + 
+        availableYears.map(y => `<option value="${y}">${y}</option>`).join('');
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const initYear = urlParams.get('year') || sessionStorage.getItem('walton_filter_year') || 'all';
+    const initMonth = urlParams.get('month') || sessionStorage.getItem('walton_filter_month') || 'all';
+
+    filterState.globalYear = initYear;
+    filterState.globalMonth = initMonth;
+
+    if (yearSelect) yearSelect.value = initYear;
+    if (monthSelect) monthSelect.value = initMonth;
+
+    if (yearSelect) {
+      yearSelect.addEventListener('change', (e) => {
+        applyGlobalFilter(e.target.value, filterState.globalMonth);
+      });
+    }
+
+    if (monthSelect) {
+      monthSelect.addEventListener('change', (e) => {
+        applyGlobalFilter(filterState.globalYear, e.target.value);
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resetGlobalFilter();
+      });
+    }
+
+    if (initYear !== 'all' || initMonth !== 'all') {
+      applyGlobalFilter(initYear, initMonth, false);
+    } else {
+      updateFilterBadge('Showing: All Historical Records (499,053 units)', false);
+      updateNavLinks('all', 'all');
+    }
+  }
+
   function init() {
     setupEventListeners();
+    initGlobalFilters();
+    renderAll();
+  }
+
+  function renderAll() {
     renderKPIs();
     renderChartVolume();
     renderChartCapacity();
@@ -79,12 +309,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderKPIs() {
-    document.getElementById('kpiTotalSales').textContent = numFmt(data.totalSales);
-    document.getElementById('kpiTotalMFC').textContent = numFmt(data.totalMFC);
-    document.getElementById('kpiMFCShare').textContent = `${pctFmt(data.mfcShare)} Market Share`;
-    document.getElementById('kpiTotalCopper').textContent = numFmt(data.totalCopper);
-    document.getElementById('kpiCopperShare').textContent = `${pctFmt(data.copperShare)} Market Share`;
-    document.getElementById('kpiPeakYear').textContent = `${data.peakYear} (${pctFmt(data.peakShare)})`;
+    const elTot = document.getElementById('kpiTotalSales');
+    const elMFC = document.getElementById('kpiTotalMFC');
+    const elMFCShare = document.getElementById('kpiMFCShare');
+    const elCu = document.getElementById('kpiTotalCopper');
+    const elCuShare = document.getElementById('kpiCopperShare');
+    const elPeak = document.getElementById('kpiPeakYear');
+
+    if (data.totalSales === 0) {
+      if (elTot) elTot.textContent = '—';
+      if (elMFC) elMFC.textContent = '—';
+      if (elMFCShare) elMFCShare.textContent = '—';
+      if (elCu) elCu.textContent = '—';
+      if (elCuShare) elCuShare.textContent = '—';
+      if (elPeak) elPeak.textContent = '—';
+      return;
+    }
+
+    if (elTot) elTot.textContent = numFmt(data.totalSales);
+    if (elMFC) elMFC.textContent = numFmt(data.totalMFC);
+    if (elMFCShare) elMFCShare.textContent = `${pctFmt(data.mfcShare)} Market Share`;
+    if (elCu) elCu.textContent = numFmt(data.totalCopper);
+    if (elCuShare) elCuShare.textContent = `${pctFmt(data.copperShare)} Market Share`;
+    if (elPeak) elPeak.textContent = `${data.peakYear} (${pctFmt(data.peakShare)})`;
+
     const kpiActive = document.getElementById('kpiActiveModels');
     if (kpiActive) kpiActive.textContent = `${DASHBOARD_DATA.metadata.activeModelsCount} Models`;
     const kpiSubtitle = document.getElementById('kpiModelSubtitle');
@@ -96,9 +344,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
 
     const yearly = data.yearly;
-    const maxVal = Math.max(...yearly.map(d => Math.max(d.mfc, d.copper)));
-    const step = 20000;
-    const yMax = Math.ceil((maxVal * 1.15) / step) * step; // 80,000
+    if (!yearly || yearly.length === 0) {
+      container.innerHTML = emptyStateHtml('No sales volume records found for this period');
+      return;
+    }
+
+    const rawMax = Math.max(1, ...yearly.map(d => Math.max(d.mfc, d.copper)));
+    let step = 20000;
+    if (rawMax <= 2000) step = 500;
+    else if (rawMax <= 10000) step = 2000;
+    else if (rawMax <= 30000) step = 5000;
+    else if (rawMax <= 50000) step = 10000;
+
+    const yMax = Math.max(step * 2, Math.ceil((rawMax * 1.15) / step) * step);
 
     const svgWidth = 1160;
     const svgHeight = 420;
@@ -203,6 +461,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
     const mix = data.capacityMix;
     const total = Object.values(mix).reduce((a, b) => a + b, 0);
+    if (!mix || total === 0) {
+      container.innerHTML = emptyStateHtml('No capacity distribution records for this period');
+      return;
+    }
 
     let rowsHtml = Object.entries(mix).map(([cap, cnt]) => {
       const share = (cnt / total) * 100;
@@ -232,23 +494,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('chartChassis');
     if (!container) return;
 
-    // High-contrast professional palette:
-    // C ODU: Deep Navy Blue #063E78
-    // H ODU: Orange #FF6B1A
-    // F/M ODU: Golden Yellow #FFC51A (F & M unified identical chassis)
-    // J ODU: Teal #0AA6A6
-    // Z ODU: Indigo #6366F1 (LCAC 5TR)
-    // D ODU: Slate #475569 (LCAC 4TR)
-    const chassisData = [
-      { id: 'C', name: 'C ODU', count: 54280, color: '#063E78', lbl: '24.2%', textFill: '#ffffff' },
-      { id: 'H', name: 'H ODU', count: 140343, color: '#FF6B1A', lbl: '62.5%', textFill: '#ffffff' },
-      { id: 'FM', name: 'F/M ODU', count: 21660, color: '#FFC51A', lbl: '9.7%', textFill: '#0A2540', subCounts: { F: 11612, M: 10048 } },
-      { id: 'J', name: 'J ODU', count: 7351, color: '#0AA6A6', lbl: '3.3%', textFill: '#0A2540', callout: true },
-      { id: 'Z', name: 'Z ODU', count: 481, color: '#6366F1', lbl: '0.2%', textFill: '#ffffff', subCounts: { '60Z 0202': 461, '60Z 0302': 20 } },
-      { id: 'D', name: 'D ODU', count: 267, color: '#475569', lbl: '0.1%', textFill: '#ffffff' }
-    ];
+    let chassisData = [];
+    if (filterState.globalYear === 'all' && filterState.globalMonth === 'all') {
+      chassisData = [
+        { id: 'C', name: 'C ODU', count: 54280, color: '#063E78', lbl: '24.2%', textFill: '#ffffff' },
+        { id: 'H', name: 'H ODU', count: 140343, color: '#FF6B1A', lbl: '62.5%', textFill: '#ffffff' },
+        { id: 'FM', name: 'F/M ODU', count: 21660, color: '#FFC51A', lbl: '9.7%', textFill: '#0A2540', subCounts: { F: 11612, M: 10048 } },
+        { id: 'J', name: 'J ODU', count: 7351, color: '#0AA6A6', lbl: '3.3%', textFill: '#0A2540', callout: true },
+        { id: 'Z', name: 'Z ODU', count: 481, color: '#6366F1', lbl: '0.2%', textFill: '#ffffff', subCounts: { '60Z 0202': 461, '60Z 0302': 20 } },
+        { id: 'D', name: 'D ODU', count: 267, color: '#475569', lbl: '0.1%', textFill: '#ffffff' }
+      ];
+    } else {
+      const cm = data.chassisMix || {};
+      const totM = Object.values(cm).reduce((a,b)=>a+b, 0);
+      const palette = [
+        { id: 'C', name: 'C ODU', count: cm.C || 0, color: '#063E78', textFill: '#ffffff' },
+        { id: 'H', name: 'H ODU', count: cm.H || 0, color: '#FF6B1A', textFill: '#ffffff' },
+        { id: 'FM', name: 'F/M ODU', count: cm.FM || 0, color: '#FFC51A', textFill: '#0A2540' },
+        { id: 'J', name: 'J ODU', count: cm.J || 0, color: '#0AA6A6', textFill: '#0A2540', callout: true },
+        { id: 'Z', name: 'Z ODU', count: cm.Z || 0, color: '#6366F1', textFill: '#ffffff' },
+        { id: 'D', name: 'D ODU', count: cm.D || 0, color: '#475569', textFill: '#ffffff' }
+      ];
+      chassisData = palette.filter(d => d.count > 0).map(d => {
+        const sh = totM > 0 ? (d.count / totM * 100) : 0;
+        return {
+          ...d,
+          lbl: `${sh.toFixed(1)}%`
+        };
+      });
+    }
 
-    const total = chassisData.reduce((sum, d) => sum + d.count, 0); // 224,382
+    const total = chassisData.reduce((sum, d) => sum + d.count, 0);
+    if (!chassisData || chassisData.length === 0 || total === 0) {
+      container.innerHTML = emptyStateHtml('No outdoor chassis records for this period');
+      return;
+    }
 
     const cx = 180;
     const cy = 185;
@@ -405,6 +685,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSalesTable() {
     const tbody = document.getElementById('salesTableBody');
     if (!tbody) return;
+
+    if (!data.yearly || data.yearly.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding:32px; color:#64748B;">No sales records match the selected filter criteria.</td></tr>';
+      return;
+    }
 
     let rowsHtml = data.yearly.map(d => `
       <tr>
