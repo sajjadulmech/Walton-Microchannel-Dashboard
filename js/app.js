@@ -205,7 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Top 10 Areas
     const areaMap = {};
     filteredRecords.forEach(r => {
-      const a = r.a || 'Unknown';
+      let a = r.a || 'Unknown';
+      if (a.includes('Narayang')) a = 'Narayangaj';
       if (!areaMap[a]) areaMap[a] = { area: a, installedArea: a, leakageRecords: 0, import: 0, inhouse: 0 };
       areaMap[a].leakageRecords++;
       if (r.orig === 'MFC Import') areaMap[a].import++;
@@ -343,24 +344,156 @@ document.addEventListener('DOMContentLoaded', () => {
       { quarter: '4th Quarter', range: '9–<12 months', rangeDays: '274 – 364 d', minDays: 274, maxDays: 364, count: q4, sharePct: totU1 > 0 ? Number((q4 / totU1 * 100).toFixed(2)) : 0, isPeak: q4 === maxQ }
     ];
 
-    // 9. Replace vs Repair
+    // 9. Coated vs Non-Coated Analysis
+    const yearsInFiltered = selectedYear !== 'all'
+      ? [Number(selectedYear)]
+      : Array.from(new Set(filteredRecords.map(r => r.y))).sort((a, b) => a - b);
+
+    const totalCoated4031 = filteredRecords.filter(r => r.ct === 1).length;
+    const totalNonCoated4031 = total - totalCoated4031;
+    const totalBlank4031 = filteredRecords.filter(r => r.sp === 'b').length;
+    const totalOther4031 = filteredRecords.filter(r => r.sp === 'o').length;
+
+    const coatedYearly4031 = yearsInFiltered.map(y => {
+      const yrRecs = filteredRecords.filter(r => r.y === y);
+      const yrTot = yrRecs.length;
+      const yrCoat = yrRecs.filter(r => r.ct === 1).length;
+      const yrNon = yrTot - yrCoat;
+      const yrBlank = yrRecs.filter(r => r.sp === 'b').length;
+      const yrOther = yrRecs.filter(r => r.sp === 'o').length;
+      return {
+        year: y,
+        total: yrTot,
+        coated: yrCoat,
+        coatedPct: yrTot > 0 ? Number((yrCoat / yrTot * 100).toFixed(2)) : 0,
+        nonCoated: yrNon,
+        nonCoatedPct: yrTot > 0 ? Number((yrNon / yrTot * 100).toFixed(2)) : 0,
+        blankSpareParts: yrBlank,
+        otherSpareParts: yrOther
+      };
+    });
+
+    const totalCoated4253 = filteredRecords.filter(r => r.ct2 === 1).length;
+    const totalNonCoated4253 = total - totalCoated4253;
+    const totalBlank4253 = totalBlank4031;
+    const totalOther4253 = total - totalCoated4253 - totalBlank4253;
+
+    const coatedYearly4253 = yearsInFiltered.map(y => {
+      const yrRecs = filteredRecords.filter(r => r.y === y);
+      const yrTot = yrRecs.length;
+      const yrCoat = yrRecs.filter(r => r.ct2 === 1).length;
+      const yrNon = yrTot - yrCoat;
+      const yrBlank = yrRecs.filter(r => r.sp === 'b').length;
+      const yrOther = yrTot - yrCoat - yrBlank;
+      return {
+        year: y,
+        total: yrTot,
+        coated: yrCoat,
+        coatedPct: yrTot > 0 ? Number((yrCoat / yrTot * 100).toFixed(2)) : 0,
+        nonCoated: yrNon,
+        nonCoatedPct: yrTot > 0 ? Number((yrNon / yrTot * 100).toFixed(2)) : 0,
+        blankSpareParts: yrBlank,
+        otherSpareParts: yrOther
+      };
+    });
+
+    const defaultCoatedReg = (DEFAULT_DATA && DEFAULT_DATA.coatedAnalysis && DEFAULT_DATA.coatedAnalysis.records)
+      ? DEFAULT_DATA.coatedAnalysis.records
+      : ((MARKET_FAILURE_DATA && MARKET_FAILURE_DATA.coatedAnalysis && MARKET_FAILURE_DATA.coatedAnalysis.records) || []);
+
+    const filteredCoatedRegister = defaultCoatedReg.filter(r => {
+      if (selectedYear !== 'all' && Number(r.year) !== Number(selectedYear)) return false;
+      if (selectedMonth !== 'all' && r.month) {
+        const mNum = Number(r.month.split('-')[1]);
+        if (mNum !== Number(selectedMonth)) return false;
+      }
+      return true;
+    });
+
+    const coatedAnalysis = {
+      pop4031: {
+        name: `Microchannel Problems (${total.toLocaleString('en-US')} Records)`,
+        populationName: `Microchannel Problems (${total.toLocaleString('en-US')} Records)`,
+        total: total,
+        coated: totalCoated4031,
+        coatedPct: total > 0 ? Number((totalCoated4031 / total * 100).toFixed(2)) : 0,
+        nonCoated: totalNonCoated4031,
+        nonCoatedPct: total > 0 ? Number((totalNonCoated4031 / total * 100).toFixed(2)) : 0,
+        blankSpareParts: totalBlank4031,
+        blankSparePartsPct: total > 0 ? Number((totalBlank4031 / total * 100).toFixed(2)) : 0,
+        otherSpareParts: totalOther4031,
+        otherSparePartsPct: total > 0 ? Number((totalOther4031 / total * 100).toFixed(2)) : 0,
+        yearly: coatedYearly4031
+      },
+      pop4253: {
+        name: `All Service (${total.toLocaleString('en-US')} Records)`,
+        populationName: `All Service (${total.toLocaleString('en-US')} Records)`,
+        total: total,
+        coated: totalCoated4253,
+        coatedPct: total > 0 ? Number((totalCoated4253 / total * 100).toFixed(2)) : 0,
+        nonCoated: totalNonCoated4253,
+        nonCoatedPct: total > 0 ? Number((totalNonCoated4253 / total * 100).toFixed(2)) : 0,
+        blankSpareParts: totalBlank4253,
+        blankSparePartsPct: total > 0 ? Number((totalBlank4253 / total * 100).toFixed(2)) : 0,
+        otherSpareParts: totalOther4253,
+        otherSparePartsPct: total > 0 ? Number((totalOther4253 / total * 100).toFixed(2)) : 0,
+        yearly: coatedYearly4253
+      },
+      records: filteredCoatedRegister
+    };
+
+    // 10. Replace vs Repair Analysis
     const repCount = filteredRecords.filter(r => r.act === 'Replace').length;
     const fixCount = filteredRecords.filter(r => r.act === 'Repair').length;
-    const rrYearly = yearlyList.map(y => {
-      const yrRecs = filteredRecords.filter(r => r.y === y.year);
+
+    const rrYearly = yearsInFiltered.map(y => {
+      const yrRecs = filteredRecords.filter(r => r.y === y);
+      const yrTot = yrRecs.length;
       const yrRep = yrRecs.filter(r => r.act === 'Replace').length;
       const yrFix = yrRecs.filter(r => r.act === 'Repair').length;
       return {
-        year: y.year,
+        year: y,
+        total: yrTot,
         replace: yrRep,
         repair: yrFix,
-        total: yrRecs.length,
-        replacePct: yrRecs.length > 0 ? Number((yrRep / yrRecs.length * 100).toFixed(2)) : 0,
-        repairPct: yrRecs.length > 0 ? Number((yrFix / yrRecs.length * 100).toFixed(2)) : 0
+        replacePct: yrTot > 0 ? Number((yrRep / yrTot * 100).toFixed(2)) : 0,
+        repairPct: yrTot > 0 ? Number((yrFix / yrTot * 100).toFixed(2)) : 0
       };
     });
-    const peakRepYear = [...rrYearly].sort((a,b)=>b.replacePct - a.replacePct)[0] || { year: selectedYear, replacePct: 0 };
-    const peakFixYear = [...rrYearly].sort((a,b)=>b.repairPct - a.repairPct)[0] || { year: selectedYear, repairPct: 0 };
+
+    const peakRepYear = [...rrYearly].sort((a, b) => b.replacePct - a.replacePct)[0] || { year: selectedYear !== 'all' ? selectedYear : '—', replacePct: 0 };
+    const peakFixYear = [...rrYearly].sort((a, b) => b.repairPct - a.repairPct)[0] || { year: selectedYear !== 'all' ? selectedYear : '—', repairPct: 0 };
+
+    const replaceRepairAnalysis = {
+      pop4031: {
+        name: `Microchannel Problems (${total.toLocaleString('en-US')} Records)`,
+        populationName: `Microchannel Problems (${total.toLocaleString('en-US')} Records)`,
+        total: total,
+        replace: repCount,
+        repair: fixCount,
+        replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
+        repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
+        peakReplaceYear: peakRepYear.year,
+        peakReplacePct: peakRepYear.replacePct,
+        peakRepairYear: peakFixYear.year,
+        peakRepairPct: peakFixYear.repairPct,
+        yearly: rrYearly
+      },
+      pop4253: {
+        name: `All Service (${total.toLocaleString('en-US')} Records)`,
+        populationName: `All Service (${total.toLocaleString('en-US')} Records)`,
+        total: total,
+        replace: repCount,
+        repair: fixCount,
+        replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
+        repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
+        peakReplaceYear: peakRepYear.year,
+        peakReplacePct: peakRepYear.replacePct,
+        peakRepairYear: peakFixYear.year,
+        peakRepairPct: peakFixYear.repairPct,
+        yearly: rrYearly
+      }
+    };
 
     return {
       metadata: {
@@ -428,55 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
         legacyResolved: [],
         unresolved: []
       },
-      coatedAnalysis: {
-        pop4031: {
-          total: total,
-          coatedCount: inhCount,
-          nonCoatedCount: impCount,
-          coatedPct: inhPct,
-          nonCoatedPct: impPct,
-          yearly: yearlyList
-        },
-        pop4253: {
-          total: total,
-          coatedCount: inhCount,
-          nonCoatedCount: impCount,
-          coatedPct: inhPct,
-          nonCoatedPct: impPct,
-          yearly: yearlyList
-        },
-        records: filteredRecords
-      },
-      replaceRepairAnalysis: {
-        pop4031: {
-          name: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
-          populationName: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
-          total: total,
-          replace: repCount,
-          repair: fixCount,
-          replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
-          repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
-          peakReplaceYear: peakRepYear.year,
-          peakReplacePct: peakRepYear.replacePct,
-          peakRepairYear: peakFixYear.year,
-          peakRepairPct: peakFixYear.repairPct,
-          yearly: rrYearly
-        },
-        pop4253: {
-          name: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
-          populationName: `Filtered Period (${total.toLocaleString('en-US')} Records)`,
-          total: total,
-          replace: repCount,
-          repair: fixCount,
-          replacePct: total > 0 ? Number((repCount / total * 100).toFixed(2)) : 0,
-          repairPct: total > 0 ? Number((fixCount / total * 100).toFixed(2)) : 0,
-          peakReplaceYear: peakRepYear.year,
-          peakReplacePct: peakRepYear.replacePct,
-          peakRepairYear: peakFixYear.year,
-          peakRepairPct: peakFixYear.repairPct,
-          yearly: rrYearly
-        }
-      }
+      coatedAnalysis: coatedAnalysis,
+      replaceRepairAnalysis: replaceRepairAnalysis
     };
   }
 
@@ -628,6 +714,26 @@ document.addEventListener('DOMContentLoaded', () => {
     renderReplaceRepairAuditCard(state.replaceRepairPopulation);
     renderTableReplaceRepair(state.replaceRepairPopulation);
     renderUnclassifiedModal();
+
+    // Update segmented toggle buttons with active filtered counts
+    if (data.coatedAnalysis) {
+      document.querySelectorAll('#coatedPopToggle .segmented-btn, #tableCoatedPopToggle .segmented-btn').forEach(b => {
+        if (b.dataset.pop === 'pop4031') {
+          b.textContent = `Microchannel Problems (${numFmt(data.coatedAnalysis.pop4031.total)})`;
+        } else if (b.dataset.pop === 'pop4253') {
+          b.textContent = `All Service (${numFmt(data.coatedAnalysis.pop4253.total)})`;
+        }
+      });
+    }
+    if (data.replaceRepairAnalysis) {
+      document.querySelectorAll('#replaceRepairPopToggle .segmented-btn').forEach(b => {
+        if (b.dataset.pop === 'pop4031') {
+          b.textContent = `Microchannel Problems (${numFmt(data.replaceRepairAnalysis.pop4031.total)})`;
+        } else if (b.dataset.pop === 'pop4253') {
+          b.textContent = `All Service (${numFmt(data.replaceRepairAnalysis.pop4253.total)})`;
+        }
+      });
+    }
   }
 
   // Event Listeners
@@ -1182,18 +1288,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevCy = idx > 0 ? pts[idx - 1].cy : -999;
         const nextCy = idx + 1 < pts.length ? pts[idx + 1].cy : 999;
 
-        // Label placement: 2025 always visible; 2024 visible when separated; others visible when isolated
+        // Label placement: filtered year always visible; otherwise 2025 always visible; 2024 visible when separated; others visible when isolated
         let showLabel = false;
         let lblY = p.cy - 8;
-        if (p.year === 2025) {
-          showLabel = true;
-          lblY = p.cy - 8;
-        } else if (p.year === 2024 && Math.abs(p.cy - prevCy) >= 14) {
-          showLabel = true;
-          lblY = (p.cy < prevCy) ? p.cy - 8 : p.cy + 14;
-        } else if (Math.abs(p.cy - prevCy) >= 16 && Math.abs(p.cy - nextCy) >= 16) {
-          showLabel = true;
-          lblY = p.cy - 8;
+        if (state.globalYear !== 'all') {
+          if (p.year === Number(state.globalYear)) {
+            showLabel = true;
+            lblY = p.cy - 8;
+          }
+        } else {
+          if (p.year === 2025) {
+            showLabel = true;
+            lblY = p.cy - 8;
+          } else if (p.year === 2024 && Math.abs(p.cy - prevCy) >= 14) {
+            showLabel = true;
+            lblY = (p.cy < prevCy) ? p.cy - 8 : p.cy + 14;
+          } else if (Math.abs(p.cy - prevCy) >= 16 && Math.abs(p.cy - nextCy) >= 16) {
+            showLabel = true;
+            lblY = p.cy - 8;
+          }
         }
 
         markersHtml += `
@@ -2758,6 +2871,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const popData = data.coatedAnalysis[popKey] || data.coatedAnalysis['pop4031'];
     const yearlyData = popData.yearly;
 
+    if (!yearlyData || yearlyData.length === 0) {
+      container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:250px;color:var(--text-secondary);font-size:13px;">No coated analysis records found for this period</div>`;
+      return;
+    }
+
     const svgW = 540;
     const svgH = 275;
     const leftPad = 52;
@@ -2767,13 +2885,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const plotH = baselineY - topPad; // 192px
 
     // Max column value across Coated and Non-Coated
-    const maxColVal = Math.max(...yearlyData.map(d => Math.max(d.coated, d.nonCoated)));
-    // Dynamic Y-axis ceiling: approx 30% headroom above tallest column
-    const yAxisMax = Math.ceil((maxColVal * 1.4) / 200) * 200; // e.g. 2,600 for 1,801
+    const maxColVal = Math.max(...yearlyData.map(d => Math.max(d.coated, d.nonCoated)), 1);
+    // Dynamic Y-axis ceiling: approx 30-35% headroom above tallest column
+    const stepCeil = maxColVal > 500 ? 200 : (maxColVal > 100 ? 50 : 20);
+    const yAxisMax = Math.max(Math.ceil((maxColVal * 1.35) / stepCeil) * stepCeil, stepCeil * 2);
 
-    // Y-axis gridlines: step by 500
+    // Y-axis gridlines
+    const gridStep = yAxisMax <= 100 ? 25 : (yAxisMax <= 500 ? 100 : 500);
     const gridVals = [];
-    for (let v = 0; v <= yAxisMax; v += 500) {
+    for (let v = 0; v <= yAxisMax; v += gridStep) {
       gridVals.push(v);
     }
     if (gridVals[gridVals.length - 1] < yAxisMax) {
@@ -2790,10 +2910,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Grouped side-by-side columns: [Coated] [Non-Coated]
     const plotW = (svgW - rightPad) - leftPad;
-    const stepX = plotW / yearlyData.length; // ~78px
-    const colW = 20; // Width of each column
-    const colGap = 5; // Gap between Coated and Non-Coated columns
-    const groupW = colW * 2 + colGap; // 45px total group width
+    const stepX = plotW / yearlyData.length;
+    const colW = Math.min(20, Math.max(8, stepX * 0.28)); // Width of each column
+    const colGap = Math.min(5, Math.max(2, stepX * 0.06)); // Gap between Coated and Non-Coated columns
+    const groupW = colW * 2 + colGap;
 
     let barsHtml = yearlyData.map((d, i) => {
       const centerX = leftPad + (i + 0.5) * stepX;
@@ -2891,6 +3011,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const elOther = document.getElementById('auditMetricOther');
     const elOtherLbl = document.getElementById('auditMetricOtherLbl');
     const elSub = document.getElementById('coatedAuditSubtitle');
+    const elBadge = document.getElementById('coatedAuditBadge');
 
     if (elTotal) elTotal.textContent = numFmt(popData.total);
     if (elCoated) elCoated.textContent = numFmt(popData.coated);
@@ -2901,6 +3022,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elBlankLbl) elBlankLbl.textContent = `Blank Parts (${popData.blankSparePartsPct.toFixed(2)}%)`;
     if (elOther) elOther.textContent = numFmt(popData.otherSpareParts);
     if (elOtherLbl) elOtherLbl.textContent = `Other Parts (${popData.otherSparePartsPct.toFixed(2)}%)`;
+    if (elBadge) elBadge.textContent = `${numFmt(popData.coated)} Coated Records`;
     if (elSub) {
       elSub.textContent = `Strict Used Spare Parts evidence & population audit (${popData.name})`;
     }
@@ -3050,6 +3172,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const popData = data.replaceRepairAnalysis[popKey] || data.replaceRepairAnalysis['pop4031'];
     const yearlyData = popData.yearly;
 
+    if (!yearlyData || yearlyData.length === 0) {
+      container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:250px;color:var(--text-secondary);font-size:13px;">No service action records found for this period</div>`;
+      return;
+    }
+
     const svgW = 540;
     const svgH = 275;
     const leftPad = 52;
@@ -3058,13 +3185,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const baselineY = 228;
     const plotH = baselineY - topPad; // 192px
 
-    // Tallest column across Replace and Repair (1,002 in pop4031, 1,034 in pop4253)
-    const maxColVal = Math.max(...yearlyData.map(d => Math.max(d.replace, d.repair)));
-    // Tallest column reaches ~70% of chart height (~30% headroom): yAxisMax = 1,500
-    const yAxisMax = 1500;
+    const maxColVal = Math.max(...yearlyData.map(d => Math.max(d.replace, d.repair)), 1);
+    const stepCeil = maxColVal > 500 ? 200 : (maxColVal > 100 ? 50 : 20);
+    const yAxisMax = Math.max(Math.ceil((maxColVal * 1.35) / stepCeil) * stepCeil, stepCeil * 2);
 
-    // Y-axis gridlines: 0, 500, 1000, 1500
-    const gridVals = [0, 500, 1000, 1500];
+    const gridStep = yAxisMax <= 100 ? 25 : (yAxisMax <= 500 ? 100 : 500);
+    const gridVals = [];
+    for (let v = 0; v <= yAxisMax; v += gridStep) {
+      gridVals.push(v);
+    }
+    if (gridVals[gridVals.length - 1] < yAxisMax) {
+      gridVals.push(yAxisMax);
+    }
+
     let gridHtml = gridVals.map(val => {
       const y = baselineY - (val / yAxisMax) * plotH;
       return `
@@ -3075,10 +3208,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Grouped side-by-side columns: [Replace] [Repair]
     const plotW = (svgW - rightPad) - leftPad;
-    const stepX = plotW / yearlyData.length; // ~78px
-    const colW = 20; // Width of each column
-    const colGap = 5; // Gap between Replace and Repair columns
-    const groupW = colW * 2 + colGap; // 45px total group width
+    const stepX = plotW / yearlyData.length;
+    const colW = Math.min(20, Math.max(8, stepX * 0.28)); // Width of each column
+    const colGap = Math.min(5, Math.max(2, stepX * 0.06)); // Gap between Replace and Repair columns
+    const groupW = colW * 2 + colGap;
 
     let barsHtml = yearlyData.map((d, i) => {
       const centerX = leftPad + (i + 0.5) * stepX;

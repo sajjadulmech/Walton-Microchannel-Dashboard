@@ -26,6 +26,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const numFmt = (num) => Number(num || 0).toLocaleString('en-US');
   const pctFmt = (num) => Number(num || 0).toFixed(2) + '%';
 
+  function getNiceMax(val) {
+    if (val <= 0) return 100;
+    if (val <= 10) return 10;
+    if (val <= 25) return 30;
+    if (val <= 50) return 60;
+    if (val <= 100) return 120;
+    if (val <= 250) return 300;
+    if (val <= 500) return 600;
+    if (val <= 1000) return 1200;
+    if (val <= 2000) return 2500;
+    if (val <= 3000) return 3500;
+    if (val <= 5000) return 6000;
+    if (val <= 10000) return 10000;
+    const mag = Math.pow(10, Math.floor(Math.log10(val)));
+    const norm = val / mag;
+    let step;
+    if (norm <= 1.5) step = 0.25 * mag;
+    else if (norm <= 3) step = 0.5 * mag;
+    else if (norm <= 7) step = 1 * mag;
+    else step = 2 * mag;
+    return Math.ceil((val * 1.25) / step) * step;
+  }
+
   // Floating Tooltip
   let tooltipEl = document.getElementById('chartTooltip');
   if (!tooltipEl) {
@@ -262,7 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Top Areas
     const areaMap = {};
     filteredRecords.forEach(r => {
-      const a = r.a || 'Unknown';
+      let a = r.a || 'Unknown';
+      if (a.includes('Narayang')) a = 'Narayangaj';
       if (!areaMap[a]) areaMap[a] = { area: a, records: 0, lpCounts: {} };
       areaMap[a].records++;
       const lp = r.lp;
@@ -533,6 +557,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (yearSel) yearSel.value = year;
     if (monthSel) monthSel.value = month;
 
+    if (year !== 'all') {
+      state.chartMonthYear = Number(year);
+      const chartYrSel = document.getElementById('chartMonthYearSelect');
+      if (chartYrSel) chartYrSel.value = String(year);
+      const subEl = document.getElementById('chartMonthlySubtitle');
+      if (subEl) subEl.textContent = `Monthly Evaporator leakage records — ${year}`;
+    } else {
+      state.chartMonthYear = 'all';
+      const chartYrSel = document.getElementById('chartMonthYearSelect');
+      if (chartYrSel) chartYrSel.value = 'all';
+      const subEl = document.getElementById('chartMonthlySubtitle');
+      if (subEl) subEl.textContent = 'Monthly Evaporator leakage records — Year-over-Year Comparison';
+    }
+
     if (year === 'all' && month === 'all') {
       data = DEFAULT_DATA;
       updateFilterBadge('Showing: All Historical Records (13,770 complaints)', false);
@@ -554,6 +592,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetGlobalFilter() {
     sessionStorage.removeItem('walton_filter_year');
     sessionStorage.removeItem('walton_filter_month');
+    state.chartMonthYear = 'all';
+    const chartYrSel = document.getElementById('chartMonthYearSelect');
+    if (chartYrSel) chartYrSel.value = 'all';
+    const subEl = document.getElementById('chartMonthlySubtitle');
+    if (subEl) subEl.textContent = 'Monthly Evaporator leakage records — Year-over-Year Comparison';
     applyGlobalFilter('all', 'all');
   }
 
@@ -823,13 +866,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const svgH = 585;
     const leftPad = 74;
     const rightPad = 18;
-    const topPad = 30;
+    const topPad = 38;
     const baselineY = 525;
     const plotH = baselineY - topPad;
     const plotW = svgW - rightPad - leftPad;
-    const maxVal = 3500; // headroom for 2,911
 
-    const gridVals = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500];
+    const maxBarVal = Math.max(...yearlyData.map(d => Math.max(d.inverter, d.nonInverter, 0)), 1);
+    const maxVal = getNiceMax(maxBarVal);
+
+    const numSteps = 5;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
+
     const gridHtml = gridVals.map(val => {
       const y = baselineY - (val / maxVal) * plotH;
       const isBase = (val === 0);
@@ -925,6 +975,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const effectiveTargetYear = (state.globalYear !== 'all') 
+      ? Number(state.globalYear) 
+      : (targetYear !== 'all' ? Number(targetYear) : 'all');
+
     const years = [2021, 2022, 2023, 2024, 2025, 2026];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const yearColors = {
@@ -944,17 +998,36 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Active years that have at least 1 record in the filtered data
+    const activeYears = (effectiveTargetYear !== 'all')
+      ? [effectiveTargetYear]
+      : years.filter(yr => monthlyMap[yr] && monthlyMap[yr].some(v => v > 0));
+
+    const plotYears = activeYears.length > 0 ? activeYears : (effectiveTargetYear !== 'all' ? [effectiveTargetYear] : years);
+
+    let maxDataVal = 0;
+    plotYears.forEach(yr => {
+      monthlyMap[yr].forEach(v => {
+        if (v > maxDataVal) maxDataVal = v;
+      });
+    });
+    const maxVal = getNiceMax(maxDataVal);
+
     const svgW = 860;
     const svgH = 585;
     const leftPad = 74;
     const rightPad = 32;
-    const topPad = 35;
+    const topPad = 38;
     const baselineY = 525;
     const plotH = baselineY - topPad;
     const plotW = svgW - rightPad - leftPad;
-    const maxVal = 1200; // Headroom for 1,064 in Apr 2026
 
-    const gridVals = [0, 200, 400, 600, 800, 1000, 1200];
+    const numSteps = 5;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
+
     const gridHtml = gridVals.map(val => {
       const y = baselineY - (val / maxVal) * plotH;
       const isBase = (val === 0);
@@ -991,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const seriesData = {};
-    years.forEach(yr => {
+    plotYears.forEach(yr => {
       const maxM = (yr === 2026) ? 7 : 11;
       const pts = [];
       for (let m = 0; m <= maxM; m++) {
@@ -1009,33 +1082,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const linesHtml = [];
-    years.forEach(yr => {
-      const isTarget = (targetYear === 'all' || targetYear === yr);
+    plotYears.forEach(yr => {
       const pts = seriesData[yr];
-      if (!pts || pts.length === 0) return '';
+      if (!pts || pts.length === 0) return;
       const color = yearColors[yr];
-      const strokeW = (yr === 2026 || yr === 2025) ? '3.2' : '2.2';
-      const opacity = isTarget ? '1' : '0.15';
+      const strokeW = (effectiveTargetYear !== 'all' || yr === 2026 || yr === 2025) ? '3.2' : '2.4';
+      const opacity = (effectiveTargetYear === 'all' || effectiveTargetYear === yr) ? '1' : '0.15';
       const pathD = getSplinePath(pts.map(p => ({ x: p.cx, y: p.cy })));
       linesHtml.push(`
         <path class="monthly-year-path path-year-${yr}" data-year="${yr}" d="${pathD}" fill="none" stroke="${color}" stroke-width="${strokeW}" opacity="${opacity}" stroke-linecap="round" stroke-linejoin="round" />
       `);
     });
 
-    // Group points by month for collision-free numerical labels and crosshair tooltips
+    // Group points by month
     const monthBuckets = Array.from({ length: 12 }, () => []);
-    years.forEach(yr => {
+    plotYears.forEach(yr => {
       const pts = seriesData[yr];
-      pts.forEach(p => {
-        monthBuckets[p.mIdx].push({ ...p, color: yearColors[yr] });
-      });
+      if (pts) {
+        pts.forEach(p => {
+          monthBuckets[p.mIdx].push({ ...p, color: yearColors[yr] });
+        });
+      }
     });
 
     // In-memory tooltips for month column hovering
     const monthColumnTooltips = [];
     monthNames.forEach((mName, mIdx) => {
       const allPtsInMonth = [];
-      years.forEach(yr => {
+      plotYears.forEach(yr => {
         const maxM = (yr === 2026) ? 7 : 11;
         if (mIdx <= maxM) {
           allPtsInMonth.push({
@@ -1064,49 +1138,36 @@ document.addEventListener('DOMContentLoaded', () => {
     monthBuckets.forEach((ptsInMonth, mIdx) => {
       if (!ptsInMonth || ptsInMonth.length === 0) return;
 
-      const p26 = ptsInMonth.find(p => p.year === 2026);
-      const p25 = ptsInMonth.find(p => p.year === 2025);
+      // Sort points descending by value so highest point is evaluated first
+      ptsInMonth.sort((a, b) => b.val - a.val);
 
-      ptsInMonth.forEach(p => {
-        const isTarget = (targetYear === 'all' || targetYear === p.year);
-        const opacity = isTarget ? '1' : '0.15';
+      ptsInMonth.forEach((p, idx) => {
+        const opacity = (effectiveTargetYear === 'all' || effectiveTargetYear === p.year) ? '1' : '0.15';
 
         let showLabel = false;
-        let lblY = p.cy - 9;
+        let lblY = p.cy - 10;
 
-        if (targetYear !== 'all') {
-          // When a specific year is chosen, ALWAYS show all its numerical values
-          if (p.year === targetYear) {
+        if (effectiveTargetYear !== 'all') {
+          // When a specific year is chosen, ALWAYS show all its numerical values!
+          if (p.year === effectiveTargetYear) {
             showLabel = true;
-            lblY = (p.cy < topPad + 18) ? (p.cy + 17) : (p.cy - 9);
+            lblY = (p.cy < topPad + 18) ? (p.cy + 17) : (p.cy - 10);
           }
         } else {
           // In "All Years (Compare)" mode:
-          // 1. 2026 (Active fleet year) is ALWAYS labeled
-          // 2. 2025 (Prior benchmark year) is ALWAYS labeled
-          // 3. Collision avoidance between 2026 and 2025:
-          if (p.year === 2026 && p26) {
+          // Show values for all points where val > 0
+          if (p.val > 0) {
             showLabel = true;
-            if (p25 && Math.abs(p26.cy - p25.cy) < 22) {
-              lblY = (p26.val >= p25.val) ? (p26.cy - 9) : (p26.cy + 17);
+            if (idx > 0) {
+              const prevPt = ptsInMonth[idx - 1];
+              if (Math.abs(p.cy - prevPt.cy) < 22) {
+                lblY = p.cy + 17;
+              } else {
+                lblY = (p.cy < topPad + 18) ? (p.cy + 17) : (p.cy - 10);
+              }
             } else {
-              lblY = (p26.cy < topPad + 18) ? (p26.cy + 17) : (p26.cy - 9);
+              lblY = (p.cy < topPad + 18) ? (p.cy + 17) : (p.cy - 10);
             }
-          } else if (p.year === 2025 && p25) {
-            showLabel = true;
-            if (p26 && Math.abs(p26.cy - p25.cy) < 22) {
-              lblY = (p25.val > p26.val) ? (p25.cy - 9) : (p25.cy + 17);
-            } else {
-              lblY = (p25.cy < topPad + 18) ? (p25.cy + 17) : (p25.cy - 9);
-            }
-          } else if (p.year === 2024 && (mIdx === 8 || mIdx === 9)) {
-            // Show 2024 autumn peak (Sep 313, Oct 274)
-            showLabel = true;
-            lblY = p.cy - 9;
-          } else if (p.year === 2023 && (mIdx === 4 || mIdx === 2)) {
-            // Show 2023 peak (May 267, Mar 258)
-            showLabel = true;
-            lblY = p.cy - 9;
           }
         }
 
@@ -1115,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         markersHtml += `
           <g class="monthly-point-marker marker-year-${p.year}" data-year="${p.year}" data-month="${p.month}" data-val="${p.val}" style="opacity: ${opacity};">
             <circle class="monthly-dot" cx="${p.cx.toFixed(2)}" cy="${p.cy.toFixed(2)}" r="4.5" fill="#FFFFFF" stroke="${p.color}" stroke-width="2.2" style="cursor: pointer;" data-tip="${pointTip}" />
-            <text class="pt-label pt-label-${p.year}" x="${p.cx.toFixed(2)}" y="${lblY.toFixed(2)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${p.color}" stroke="#FFFFFF" stroke-width="3" paint-order="stroke" stroke-linecap="round" stroke-linejoin="round" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" pointer-events="none" style="${showLabel ? '' : 'display:none;'}">${numFmt(p.val)}</text>
+            <text class="pt-label pt-label-${p.year}" x="${p.cx.toFixed(2)}" y="${lblY.toFixed(2)}" text-anchor="middle" font-size="11" font-weight="700" fill="${p.color}" stroke="#FFFFFF" stroke-width="3.5" paint-order="stroke" stroke-linecap="round" stroke-linejoin="round" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" pointer-events="none" style="${showLabel ? '' : 'display:none;'}">${numFmt(p.val)}</text>
           </g>
         `;
       });
@@ -1193,11 +1254,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Order strictly from highest to lowest
     const sortedPoints = [...data.leakagePoints].sort((a, b) => b.records - a.records);
-    const totalLeaks = sortedPoints.reduce((sum, p) => sum + p.records, 0); // 13,770
+    const totalLeaks = sortedPoints.reduce((sum, p) => sum + p.records, 0);
 
-    // Left-axis maximum: 10,000 so highest column (8,724) occupies 87.24% of available plot height
-    // cleanly aligning with dual axis increments of 2,000 records / 20%
-    const maxVal = 10000;
+    const maxBarVal = sortedPoints[0]?.records || 1;
+    const maxVal = getNiceMax(maxBarVal);
 
     const svgW = 760;
     const svgH = 515;
@@ -1209,13 +1269,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const plotH = baselineY - topPad; // 355px
 
     // Palette: Sequential severity progression matching benchmark visual reference
-    // Highest: Dark Brown (#6B3E2E)
-    // #2: Deep Blue (#0B3A70)
-    // #3: Orange-Red / Terracotta (#E07F46)
-    // #4: Warm Olive (#B1A542)
-    // #5: Muted Green (#71AE6B)
-    // #6: Light Green (#A8D5A2)
-    // #7: Red / Coral (#D9534F)
     const paletteMap = {
       'U-Bend Leakage (Body/Return/Joint)': '#6B3E2E',
       'Hairpin Tube Body Leakage': '#0B3A70',
@@ -1243,41 +1296,42 @@ document.addEventListener('DOMContentLoaded', () => {
       return [parts.slice(0, mid).join(' '), parts.slice(mid).join(' ')];
     }
 
-    // Gridlines & Dual Axes levels: 0, 2000, 4000, 6000, 8000, 10000 <-> 0%, 20%, 40%, 60%, 80%, 100%
+    // Gridlines & Dual Axes levels: 0, 20%, 40%, 60%, 80%, 100%
     const gridVals = [
-      { val: 0, leftLbl: '0', rightLbl: '0%' },
-      { val: 2000, leftLbl: '2,000', rightLbl: '20%' },
-      { val: 4000, leftLbl: '4,000', rightLbl: '40%' },
-      { val: 6000, leftLbl: '6,000', rightLbl: '60%' },
-      { val: 8000, leftLbl: '8,000', rightLbl: '80%' },
-      { val: 10000, leftLbl: '10,000', rightLbl: '100%' }
+      { frac: 0.0, rightLbl: '0%' },
+      { frac: 0.2, rightLbl: '20%' },
+      { frac: 0.4, rightLbl: '40%' },
+      { frac: 0.6, rightLbl: '60%' },
+      { frac: 0.8, rightLbl: '80%' },
+      { frac: 1.0, rightLbl: '100%' }
     ];
 
     let gridHtml = gridVals.map(g => {
-      const y = baselineY - (g.val / maxVal) * plotH;
-      const isBase = g.val === 0;
+      const val = Math.round(g.frac * maxVal);
+      const y = baselineY - g.frac * plotH;
+      const isBase = g.frac === 0;
       return `
         <!-- Horizontal Gridline -->
-        <line x1="${leftPad}" y1="${y}" x2="${svgW - rightPad}" y2="${y}" stroke="${isBase ? '#B8C7D9' : '#E2E8F0'}" stroke-dasharray="${isBase ? 'none' : '4 4'}" stroke-width="${isBase ? '1.5' : '1'}" />
+        <line x1="${leftPad}" y1="${y.toFixed(2)}" x2="${(svgW - rightPad).toFixed(2)}" y2="${y.toFixed(2)}" stroke="${isBase ? '#B8C7D9' : '#E2E8F0'}" stroke-dasharray="${isBase ? 'none' : '4 4'}" stroke-width="${isBase ? '1.5' : '1'}" />
         <!-- Left Tick & Label -->
-        <line x1="${leftPad - 5}" y1="${y}" x2="${leftPad}" y2="${y}" stroke="#B8C7D9" stroke-width="1.5" />
-        <text x="${leftPad - 8}" y="${y + 4}" text-anchor="end" font-size="11" font-weight="600" fill="#536778" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${g.leftLbl}</text>
+        <line x1="${leftPad - 5}" y1="${y.toFixed(2)}" x2="${leftPad}" y2="${y.toFixed(2)}" stroke="#B8C7D9" stroke-width="1.5" />
+        <text x="${leftPad - 8}" y="${(y + 4).toFixed(2)}" text-anchor="end" font-size="11" font-weight="600" fill="#536778" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${numFmt(val)}</text>
         <!-- Right Tick & Label -->
-        <line x1="${svgW - rightPad}" y1="${y}" x2="${svgW - rightPad + 5}" y2="${y}" stroke="#B8C7D9" stroke-width="1.5" />
-        <text x="${svgW - rightPad + 9}" y="${y + 4}" text-anchor="start" font-size="11" font-weight="600" fill="#536778" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${g.rightLbl}</text>
+        <line x1="${svgW - rightPad}" y1="${y.toFixed(2)}" x2="${svgW - rightPad + 5}" y2="${y.toFixed(2)}" stroke="#B8C7D9" stroke-width="1.5" />
+        <text x="${svgW - rightPad + 9}" y="${(y + 4).toFixed(2)}" text-anchor="start" font-size="11" font-weight="600" fill="#536778" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${g.rightLbl}</text>
       `;
     }).join('');
 
     const colStep = plotW / sortedPoints.length; // ~90.28px
-    const colW = 62;
+    const colW = Math.min(62, colStep * 0.7);
 
     let cum = 0;
     const pointsCoords = [];
 
     let columnsHtml = sortedPoints.map((p, i) => {
       cum += p.records;
-      const cumPct = (cum / totalLeaks) * 100;
-      const sharePct = (p.records / totalLeaks) * 100;
+      const cumPct = totalLeaks > 0 ? (cum / totalLeaks) * 100 : 0;
+      const sharePct = totalLeaks > 0 ? (p.records / totalLeaks) * 100 : 0;
 
       const cx = leftPad + (i + 0.5) * colStep;
       const colX = cx - colW / 2;
@@ -1322,12 +1376,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cumulative line path string
     const polylinePoints = pointsCoords.map(pt => `${pt.cx.toFixed(2)},${pt.my.toFixed(2)}`).join(' ');
 
-    // Cumulative Markers and Labels
+    // Cumulative Markers and Labels - CRITICAL FIX: ALL LABELS VISIBLE WITH WHITE HALO
     let markersHtml = pointsCoords.map((pt, i) => {
-      const isFirst = i === 0;
-      const lblColor = isFirst ? '#FFFFFF' : '#0B3A70';
-      const lblY = isFirst ? pt.my - 8 : pt.my - 9;
-      const halo = isFirst ? '' : 'paint-order="stroke" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+      const lblColor = '#0B3A70';
+      const lblY = (pt.my < topPad + 18) ? (pt.my + 16) : (pt.my - 9);
+      const halo = 'paint-order="stroke" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"';
       const cumMarkerTooltip = `<strong>Cumulative Share: ${pt.cumStr}</strong><br>${pt.category}<br>Cumulative Leaks: <strong>${numFmt(sortedPoints.slice(0, i + 1).reduce((s, x) => s + x.records, 0))}</strong> of ${numFmt(totalLeaks)}`;
 
       return `
@@ -1395,9 +1448,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('chartTopAreas');
     if (!container) return;
 
+    if (!data.topAreas || data.topAreas.length === 0) {
+      container.innerHTML = emptyStateHtml('No service center records found for this period');
+      return;
+    }
+
     const sortedAreas = [...data.topAreas].sort((a, b) => b.records - a.records).slice(0, 10);
-    const totalTop10 = sortedAreas.reduce((sum, a) => sum + a.records, 0); // 10,733
-    const totalPopulation = data.metadata.totalRecords || 13770;
+    const totalTop10 = sortedAreas.reduce((sum, a) => sum + a.records, 0);
+    const totalPopulation = data.metadata.totalRecords || 1;
     const top10PctOfTotal = ((totalTop10 / totalPopulation) * 100).toFixed(2);
 
     const cardSubtitle = container.closest('.chart-card')?.querySelector('.chart-subtitle');
@@ -1405,7 +1463,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cardSubtitle.textContent = `Top 10 Service Centers account for ${numFmt(totalTop10)} records (${top10PctOfTotal}% of total leaks)`;
     }
 
-    const maxVal = 4000; // Headroom for 3,358 in CTG Road
+    const maxBarVal = sortedAreas[0]?.records || 1;
+    const maxVal = getNiceMax(maxBarVal);
 
     const svgW = 760;
     const svgH = 515;
@@ -1420,8 +1479,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const rowStepY = 41;
     const baselineY = 445;
 
-    // Grid ticks: 0, 1000, 2000, 3000, 4000
-    const gridVals = [0, 1000, 2000, 3000, 4000];
+    const numSteps = 4;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
 
     let gridHtml = gridVals.map(val => {
       const x = zeroX + (val / maxVal) * plotW;
@@ -1498,19 +1560,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container || !data.duration) return;
 
     const durData = data.duration.completedYears;
+    if (!durData || durData.length === 0) {
+      container.innerHTML = emptyStateHtml('No operating duration records found for this period');
+      return;
+    }
     const svgW = 540;
     const svgH = 360;
     const leftPad = 52;
     const rightPad = 18;
-    const topPad = 26;
+    const topPad = 32;
     const baselineY = 302;
-    const plotH = baselineY - topPad; // 276px
-    const plotW = (svgW - rightPad) - leftPad; // 470px
+    const plotH = baselineY - topPad;
+    const plotW = (svgW - rightPad) - leftPad;
 
-    const maxVal = 4200; // Headroom for 3,718 at 1 Year
+    const maxBarVal = Math.max(...durData.map(d => d.records), 1);
+    const maxVal = getNiceMax(maxBarVal);
 
-    // Gridlines: 0, 1000, 2000, 3000, 4000
-    const gridVals = [0, 1000, 2000, 3000, 4000];
+    const numSteps = 4;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
+
     let gridHtml = gridVals.map(val => {
       const y = baselineY - (val / maxVal) * plotH;
       return `
@@ -1584,6 +1655,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const quarters = data.duration.underOneYearQuarters;
     const totalCount = quarters.reduce((s, q) => s + q.records, 0);
 
+    if (totalCount === 0) {
+      container.innerHTML = `
+        <div class="quarter-pie-card-content" style="padding: 24px; text-align: center;">
+          <div style="font-size: 13px; font-weight: 600; color: #64748B; margin-top: 20px;">No &lt; 1 Year Infant Mortality Records in this period</div>
+          <div class="pie-total-banner" style="margin-top: 30px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 8px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Total &lt; 1 Year Infant Mortality: <span style="margin-left: 6px; font-weight: 800; color: #0B3A70;">0 Complaints</span>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
     const palette = [
       { color: '#B3261E', textColor: '#FFFFFF' }, // 1st Quarter
       { color: '#D97706', textColor: '#FFFFFF' }, // 2nd Quarter
@@ -1602,36 +1686,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     quarters.forEach((q, idx) => {
       const p = palette[idx] || { color: '#0B3A70', textColor: '#FFFFFF' };
-      const share = q.records / totalCount;
+      const share = totalCount > 0 ? q.records / totalCount : 0;
       const angleDeg = share * 360.0;
       const startDeg = currentDeg;
       const endDeg = currentDeg + angleDeg;
       const midDeg = (startDeg + endDeg) / 2.0;
 
-      const startRad = (startDeg * Math.PI) / 180;
-      const endRad = (endDeg * Math.PI) / 180;
-      const midRad = (midDeg * Math.PI) / 180;
-
-      const x1 = (cx + r * Math.sin(startRad)).toFixed(2);
-      const y1 = (cy - r * Math.cos(startRad)).toFixed(2);
-      const x2 = (cx + r * Math.sin(endRad)).toFixed(2);
-      const y2 = (cy - r * Math.cos(endRad)).toFixed(2);
-
-      const largeArc = angleDeg > 180 ? 1 : 0;
-      const pathD = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-      const lr = r * 0.63;
-      const lx = (cx + lr * Math.sin(midRad)).toFixed(1);
-      const ly = (cy - lr * Math.cos(midRad)).toFixed(1);
-
       const tooltipText = `<strong>${q.quarter} (${q.monthsRange})</strong><br>• Elapsed Days: ${q.elapsedDays}<br>• Confirmed Records: <strong>${numFmt(q.records)}</strong> (${q.sharePct}%)<br>• Engineering Trajectory: <em>${q.engineeringTrajectory}</em>`;
 
-      wedgesSvg.push(`<path class="pie-slice slice-q${idx + 1}" data-tooltip="${tooltipText}" d="${pathD}" fill="${p.color}" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" />`);
+      if (q.records > 0 && angleDeg > 0) {
+        if (Math.abs(angleDeg - 360.0) < 0.01) {
+          wedgesSvg.push(`<circle class="pie-slice slice-q${idx + 1}" data-tooltip="${tooltipText}" cx="${cx}" cy="${cy}" r="${r}" fill="${p.color}" stroke="#FFFFFF" stroke-width="2.5" />`);
+          labelsSvg.push(`<text class="pie-label label-q${idx + 1}" x="${cx}" y="${cy}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" pointer-events="none">
+            <tspan x="${cx}" dy="-4" font-size="14" font-weight="700" fill="${p.textColor}">${numFmt(q.records)}</tspan>
+            <tspan x="${cx}" dy="18" font-size="11.5" font-weight="600" fill="${p.textColor}">(${q.sharePct}%)</tspan>
+          </text>`);
+        } else {
+          const startRad = (startDeg * Math.PI) / 180;
+          const endRad = (endDeg * Math.PI) / 180;
+          const midRad = (midDeg * Math.PI) / 180;
 
-      labelsSvg.push(`<text class="pie-label label-q${idx + 1}" x="${lx}" y="${ly}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" pointer-events="none">
-        <tspan x="${lx}" dy="-4" font-size="13.5" font-weight="700" fill="${p.textColor}">${numFmt(q.records)}</tspan>
-        <tspan x="${lx}" dy="16" font-size="11" font-weight="600" fill="${p.textColor}">(${q.sharePct}%)</tspan>
-      </text>`);
+          const x1 = (cx + r * Math.sin(startRad)).toFixed(2);
+          const y1 = (cy - r * Math.cos(startRad)).toFixed(2);
+          const x2 = (cx + r * Math.sin(endRad)).toFixed(2);
+          const y2 = (cy - r * Math.cos(endRad)).toFixed(2);
+
+          const largeArc = angleDeg > 180 ? 1 : 0;
+          const pathD = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+          const lr = r * 0.63;
+          const lx = (cx + lr * Math.sin(midRad)).toFixed(1);
+          const ly = (cy - lr * Math.cos(midRad)).toFixed(1);
+
+          wedgesSvg.push(`<path class="pie-slice slice-q${idx + 1}" data-tooltip="${tooltipText}" d="${pathD}" fill="${p.color}" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" />`);
+
+          if (angleDeg >= 12) {
+            labelsSvg.push(`<text class="pie-label label-q${idx + 1}" x="${lx}" y="${ly}" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" pointer-events="none">
+              <tspan x="${lx}" dy="-4" font-size="13.5" font-weight="700" fill="${p.textColor}">${numFmt(q.records)}</tspan>
+              <tspan x="${lx}" dy="16" font-size="11" font-weight="600" fill="${p.textColor}">(${q.sharePct}%)</tspan>
+            </text>`);
+          }
+        }
+      }
 
       legendHtml.push(`
         <div class="pie-legend-item item-q${idx + 1}" data-tooltip="${tooltipText}">
@@ -1687,17 +1783,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container || !data.capacities) return;
 
     const caps = data.capacities.slice(0, 5); // 1.5T, 2T, 1T, 2.5T, 4T
+    if (!caps || caps.length === 0) {
+      container.innerHTML = emptyStateHtml('No capacity records found for this period');
+      return;
+    }
     const svgW = 540;
     const svgH = 360;
     const leftPad = 52;
     const rightPad = 18;
-    const topPad = 26;
+    const topPad = 32;
     const baselineY = 302;
     const plotH = baselineY - topPad;
     const plotW = (svgW - rightPad) - leftPad;
-    const maxVal = 9500; // Headroom for 8,233
 
-    const gridVals = [0, 2000, 4000, 6000, 8000];
+    const maxBarVal = Math.max(...caps.map(c => c.records), 1);
+    const maxVal = getNiceMax(maxBarVal);
+
+    const numSteps = 4;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
+
     let gridHtml = gridVals.map(val => {
       const y = baselineY - (val / maxVal) * plotH;
       return `
@@ -1750,17 +1857,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container || !data.yearly) return;
 
     const yearlyData = data.yearly;
+    if (!yearlyData || yearlyData.length === 0) {
+      container.innerHTML = emptyStateHtml('No corrective action records found for this period');
+      return;
+    }
     const svgW = 540;
     const svgH = 360;
     const leftPad = 52;
     const rightPad = 18;
-    const topPad = 26;
+    const topPad = 32;
     const baselineY = 302;
     const plotH = baselineY - topPad;
     const plotW = (svgW - rightPad) - leftPad;
-    const maxVal = 2500; // Headroom for 2,040
 
-    const gridVals = [0, 500, 1000, 1500, 2000, 2500];
+    const maxBarVal = Math.max(...yearlyData.map(d => Math.max(d.replace, d.repair, 0)), 1);
+    const maxVal = getNiceMax(maxBarVal);
+
+    const numSteps = 5;
+    const stepVal = Math.round(maxVal / numSteps);
+    const gridVals = [];
+    for (let s = 0; s <= numSteps; s++) gridVals.push(s * stepVal);
+    if (gridVals[gridVals.length - 1] < maxVal) gridVals.push(maxVal);
+
     const gridHtml = gridVals.map(val => {
       const y = baselineY - (val / maxVal) * plotH;
       return `
