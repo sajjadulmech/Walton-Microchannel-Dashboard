@@ -1171,12 +1171,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const baselineY = 525;
     const plotW = svgW - leftPad - rightPad; // 774px
     const plotH = baselineY - topPad; // 497px (substantially enlarged plot height: +72.6% vertical plotting area)
-    const maxVal = 400; // 400 ceiling provides clean headroom for Aug 2026 peak (358 records)
+    // Calculate dynamic headroom based on actual max monthly value across all series
+    let maxMonthlyVal = 0;
+    years.forEach(y => {
+      monthNames.forEach((mName, mIdx) => {
+        const mNum = mIdx + 1;
+        const match = data.monthly.find(d => Number(d.year) === y && (d.monthNum === mNum || d.month === mName));
+        if (match) {
+          const tot = (match.totalLeakage !== undefined) ? match.totalLeakage : (match.importLeakage + match.inhouseLeakage);
+          if (tot > maxMonthlyVal) maxMonthlyVal = tot;
+        }
+      });
+    });
 
+    function getNiceMax(val) {
+      if (val <= 100) return 100;
+      if (val <= 200) return 200;
+      if (val <= 300) return 300;
+      if (val <= 400) return 400;
+      if (val <= 500) return 500;
+      if (val <= 600) return 600;
+      return Math.ceil(val / 100) * 100;
+    }
+
+    const maxVal = getNiceMax(maxMonthlyVal); // Dynamically scales to 500 when peak is 429
     const stepX = plotW / (monthNames.length - 1); // 774 / 11 = 70.36px
 
-    // Gridlines: 0, 50, 100, 150, 200, 250, 300, 350, 400
-    const gridVals = [0, 50, 100, 150, 200, 250, 300, 350, 400];
+    // Dynamic gridlines in steps of 50
+    const stepVal = maxVal <= 250 ? 25 : 50;
+    const gridVals = [];
+    for (let g = 0; g <= maxVal; g += stepVal) {
+      gridVals.push(g);
+    }
     const gridHtml = gridVals.map(gv => {
       const gy = baselineY - (gv / maxVal) * plotH;
       const isBase = (gv === 0);
