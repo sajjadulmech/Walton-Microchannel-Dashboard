@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (year === 'all' && month === 'all') {
       data = DEFAULT_DATA;
-      updateFilterBadge('Showing: All Historical Records (499,053 units)', false);
+      updateFilterBadge('Showing: All Historical Records (504,991 units)', false);
     } else {
       const records = (DASHBOARD_DATA && DASHBOARD_DATA.monthlySales) ? DASHBOARD_DATA.monthlySales : [];
       const filtered = getFilteredMonthlySales(records, year, month);
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initYear !== 'all' || initMonth !== 'all') {
       applyGlobalFilter(initYear, initMonth, false);
     } else {
-      updateFilterBadge('Showing: All Historical Records (499,053 units)', false);
+      updateFilterBadge('Showing: All Historical Records (504,991 units)', false);
       updateNavLinks('all', 'all');
     }
   }
