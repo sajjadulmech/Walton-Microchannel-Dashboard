@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (year === 'all' && month === 'all') {
       data = DEFAULT_DATA;
-      updateFilterBadge('Showing: All Historical Records (5,513 confirmed leaks)', false);
+      updateFilterBadge('Showing: All Historical Records (5,739 confirmed leaks)', false);
     } else {
       const records = (MARKET_FAILURE_DATA && MARKET_FAILURE_DATA.records) ? MARKET_FAILURE_DATA.records : [];
       const filtered = getFilteredData(records, year, month);
@@ -678,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initYear !== 'all' || initMonth !== 'all') {
       applyGlobalFilter(initYear, initMonth, false);
     } else {
-      updateFilterBadge('Showing: All Historical Records (5,513 confirmed leaks)', false);
+      updateFilterBadge('Showing: All Historical Records (5,739 confirmed leaks)', false);
       updateNavLinks('all', 'all');
     }
   }

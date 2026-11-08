@@ -1,6 +1,6 @@
 /**
  * Walton RAC Process Development - Evaporator Market Failure Engine
- * Dedicated Standalone Dashboard for Indoor Evaporator Leakage Intelligence (2021 - September 2026)
+ * Dedicated Standalone Dashboard for Indoor Evaporator Leakage Intelligence (2021 - October 2026)
  * Pure Vanilla JavaScript (ES6+), Zero External Dependencies
  */
 
@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (year === 'all' && month === 'all') {
       data = DEFAULT_DATA;
-      updateFilterBadge('Showing: All Historical Records (14,232 complaints)', false);
+      updateFilterBadge('Showing: All Historical Records (14,630 complaints)', false);
     } else {
       const records = (EVAPORATOR_DATA && EVAPORATOR_DATA.records) ? EVAPORATOR_DATA.records : [];
       const filtered = getFilteredEvapData(records, year, month);
@@ -641,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initYear !== 'all' || initMonth !== 'all') {
       applyGlobalFilter(initYear, initMonth, false);
     } else {
-      updateFilterBadge('Showing: All Historical Records (14,232 complaints)', false);
+      updateFilterBadge('Showing: All Historical Records (14,630 complaints)', false);
       updateNavLinks('all', 'all');
     }
   }
