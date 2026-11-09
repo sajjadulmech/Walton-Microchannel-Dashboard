@@ -1557,9 +1557,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 6. Chart 5: Sales-to-Service Operating Duration (Completed Years Histogram)
   function renderChartSalesToService() {
     const container = document.getElementById('chartSalesToService');
-    if (!container || !data.duration) return;
+    if (!container || (!data.duration && !data.durations)) return;
 
-    const durData = data.duration.completedYears;
+    const durData = (data.duration && data.duration.completedYears) ? data.duration.completedYears : data.durations;
     if (!durData || durData.length === 0) {
       container.innerHTML = emptyStateHtml('No operating duration records found for this period');
       return;
@@ -1596,7 +1596,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamic ranking and colors from highest to lowest
     const sortedDur = [...durData].sort((a, b) => b.records - a.records);
     const rankMap = new Map();
-    sortedDur.forEach((d, idx) => rankMap.set(d.label, idx));
+    sortedDur.forEach((d, idx) => rankMap.set(d.label || d.binLabel, idx));
 
     const progressionColors = [
       '#8B2E2E', // Rank 1: 2 Years (3,739)
@@ -1609,24 +1609,26 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let columnsHtml = durData.map((d, i) => {
+      const dLabel = d.label || d.binLabel;
+      const dPhase = d.phase || d.lifePhase || '';
       const centerX = leftPad + (i + 0.5) * stepX;
       const colX = centerX - colW / 2;
       const hCol = (d.records / maxVal) * plotH;
       const yCol = baselineY - hCol;
 
-      const rank = rankMap.get(d.label) ?? 0;
+      const rank = rankMap.get(dLabel) ?? 0;
       const fillCol = progressionColors[Math.min(rank, progressionColors.length - 1)];
-      const isPeak = d.label === '1 Year' || d.label === '2 Years';
+      const isPeak = dLabel === '1 Year' || dLabel === '2 Years';
       const labelCol = isPeak ? '#8B2E2E' : '#0B3A70';
 
-      const tooltipText = `<strong>${d.label} (${d.daysRange})</strong><br>• Confirmed Complaints: <strong>${numFmt(d.records)}</strong> (${d.sharePct}%)<br>• Cumulative: ${d.cumulativeShare}%<br>• Lifecycle Phase: <em>${d.phase}</em><br>• Valid Dataset Baseline: ${numFmt(data.duration.totalValidRecords)} records`;
+      const tooltipText = `<strong>${dLabel} (${d.daysRange})</strong><br>• Confirmed Complaints: <strong>${numFmt(d.records)}</strong> (${d.sharePct}%)<br>• Cumulative: ${d.cumulativeShare}%<br>• Lifecycle Phase: <em>${dPhase}</em><br>• Valid Dataset Baseline: ${numFmt((data.duration && data.duration.totalValidRecords) ? data.duration.totalValidRecords : (data.metadata ? data.metadata.totalRecords : 0))} records`;
 
       return `
         <g class="svg-bar-col" style="cursor: pointer;" data-tooltip="${tooltipText}">
           <rect x="${centerX - stepX / 2}" y="${topPad}" width="${stepX}" height="${plotH + 35}" fill="transparent" />
           <rect x="${colX}" y="${yCol}" width="${colW}" height="${hCol}" fill="${fillCol}" stroke="${fillCol}" stroke-width="0.5" rx="3" ry="3" />
           <text x="${centerX}" y="${yCol - 8}" text-anchor="middle" font-size="${isPeak ? '10' : '9.5'}" font-weight="${isPeak ? '700' : '600'}" fill="${labelCol}" font-family="sans-serif">${numFmt(d.records)} (${d.sharePct}%)</text>
-          <text x="${centerX}" y="${baselineY + 18}" text-anchor="middle" font-size="11" font-weight="${isPeak ? '700' : '600'}" fill="${isPeak ? '#8B2E2E' : 'var(--text-primary)'}" font-family="sans-serif">${d.label}</text>
+          <text x="${centerX}" y="${baselineY + 18}" text-anchor="middle" font-size="11" font-weight="${isPeak ? '700' : '600'}" fill="${isPeak ? '#8B2E2E' : 'var(--text-primary)'}" font-family="sans-serif">${dLabel}</text>
           <text x="${centerX}" y="${baselineY + 32}" text-anchor="middle" font-size="8.5" font-weight="500" fill="var(--text-muted)" font-family="sans-serif">${d.daysRange}</text>
         </g>
       `;
@@ -1824,14 +1826,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const y = baselineY - h;
       const colColor = colors[i % colors.length];
 
-      const tooltipText = `<strong>${c.size}</strong><br>• Confirmed Complaints: <strong>${numFmt(c.records)}</strong> (${c.sharePct}%)<br>• Inverter Share: <strong>${c.inverterShare}%</strong> | Non-Inv: ${c.nonInverterShare}%<br>• Dominant Leak Point: <em>${c.dominantLeakPoint}</em>`;
+      const tooltipText = `<strong>${c.size || c.capacity}</strong><br>• Confirmed Complaints: <strong>${numFmt(c.records)}</strong> (${c.sharePct}%)<br>• Inverter Share: <strong>${c.inverterShare}%</strong> | Non-Inv: ${c.nonInverterShare}%<br>• Dominant Leak Point: <em>${c.dominantLeakPoint}</em>`;
 
       return `
         <g class="svg-bar-col" style="cursor: pointer;" data-tooltip="${tooltipText}">
           <rect x="${centerX - stepX / 2}" y="${topPad}" width="${stepX}" height="${plotH + 35}" fill="transparent" />
           <rect x="${colX}" y="${y}" width="${colW}" height="${h}" fill="${colColor}" rx="3" ry="3" />
           <text x="${centerX}" y="${y - 8}" text-anchor="middle" font-size="10" font-weight="700" fill="${colColor}" font-family="sans-serif">${numFmt(c.records)} (${c.sharePct}%)</text>
-          <text x="${centerX}" y="${baselineY + 20}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E293B" font-family="sans-serif">${c.size}</text>
+          <text x="${centerX}" y="${baselineY + 20}" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E293B" font-family="sans-serif">${c.size || c.capacity}</text>
         </g>
       `;
     }).join('');
@@ -2075,16 +2077,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderTableSalesToService() {
     const tbody = document.getElementById('tbodySalesToService');
-    if (!tbody) return;
+    if (!tbody || (!data.duration && !data.durations)) return;
+    const durList = (data.duration && data.duration.completedYears) ? data.duration.completedYears : (data.durations || []);
+    if (!durList) return;
 
-    tbody.innerHTML = data.duration.completedYears.map(d => `
+    tbody.innerHTML = durList.map(d => `
       <tr>
-        <td style="font-weight: 700;">${d.label}</td>
+        <td style="font-weight: 700;">${d.label || d.binLabel}</td>
         <td><code>${d.daysRange}</code></td>
         <td class="col-num" style="font-weight: 700; color: ${d.color};">${numFmt(d.records)}</td>
         <td class="col-num" style="font-weight: 600;">${d.sharePct}%</td>
         <td class="col-num">${d.cumulativeShare}%</td>
-        <td style="font-size: 12px; color: #475569;">${d.phase}</td>
+        <td style="font-size: 12px; color: #475569;">${d.phase || d.lifePhase || "—"}</td>
       </tr>
     `).join('');
   }
@@ -2095,7 +2099,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tbody.innerHTML = data.capacities.map(c => `
       <tr>
-        <td style="font-weight: 700;">${c.size}</td>
+        <td style="font-weight: 700;">${c.size || c.capacity}</td>
         <td class="col-num" style="font-weight: 700; color: #0B3A70;">${numFmt(c.records)}</td>
         <td class="col-num" style="font-weight: 600;">${c.sharePct}%</td>
         <td class="col-num" style="color: #0B3A70;">${c.inverterShare}%</td>
@@ -2143,7 +2147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderTableRepeatVisits() {
     const tbody = document.getElementById('tbodyRepeat');
-    if (!tbody) return;
+    if (!tbody || !data.repeatVisits) return;
 
     tbody.innerHTML = data.repeatVisits.map(r => `
       <tr>
